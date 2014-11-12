@@ -13,16 +13,16 @@ var Moduino = {
 			'enabled' 		: true,
 			
 			'resizeContent'	: {
-				'enabled'	: true, 
-				'value'		: 87 
+				'enabled'	: true, 			
+				'value'		: '87%' 			/** Value to resize content to. **/
 			},
 			
 			'minimizeHeader' : {
-				'enabled'			: true,
-				'useContentWidth'	: false
+				'enabled'			: true,		/** Shrink the forum header. **/
+				'useContentWidth'	: true		/** Resize to width of page content if enabled ( config.global.resizeContent ). **/
 			},
 			
-			'removeShopping' : true
+			'removeShopping' : true				/** Remove the shopping cart icon. **/
 		},
 		
 		'index' : {
@@ -34,7 +34,7 @@ var Moduino = {
 			
 			'forum' : {
 				'enabled'			: true,
-				'shrinkContainers'	: true,
+				'shrinkContainers'	: true,		/** Minimize thread listing sizes. **/
 				'removeMenu'		: true,		/** There is currently an empty menu bar above thread listing. (17px high) **/
 				
 				'sticky' 			: {
@@ -51,19 +51,23 @@ var Moduino = {
 
 			'code'				: {
 				'enabled' 		: true,
-				'hoverSelect'	: true
+				'hoverSelect'	: true			/** Allow selection of code text using a hover over, this hides the code header. **/
 			},
 			
 			'quote'				: {
 				'enabled' 		: true,
-				'hoverSelect'	: true,
-				'hideEmptyHead'	: true,
-				'colours'		: [ '#e4e4e4', 'rgba(250, 242, 0, 0.28)', 'rgb(245, 215, 120)' ]
+				'hoverSelect'	: true,			/** Allow selection of quote text using a hover over **/
+				'hideEmptyHead'	: true,			/** Hide the header if all it contains is 'Quote'. **/
+				'colours'		: [ 
+					'#e4e4e4', 					/** Quote header background. **/
+					'rgba(250, 242, 0, 0.28)',	/** Quote content background. **/
+					'rgb(245, 215, 120)'		/** Quote border. **/
+				]
 			},
 			
 			'sizeableCode'		: {
 				'enabled'		: true,			/** Can be set to false if using highlighting. (value is used). **/
-				'value'			: 250			/** Maximum starting height for long code boxes **/
+				'value'			: 220			/** Maximum starting height for long code boxes **/
 			},
 			
 			'hideIP'			: true,			/** No need to know everyone's IP has been logged. **/
@@ -73,13 +77,13 @@ var Moduino = {
 			
 			'codeHighlighting'	: {
 				'enabled'		: true,
-				'lineNumbers'	: true,
-				'pathToJS'		: '//arduino.land/JS/SyntaxHighlighter/',
-				'pathToCSS'		: '//arduino.land/CSS/SyntaxHighlighter/',
-				'core'			: 'Moduino',
-				'brushes'		: [ 'Cpp' ],
-				'theme'			: 'Moduino',
-				'cssExt'		: 'scss'
+				'lineNumbers'	: true,			/** Allow syntax highlighter to insert line numbers. **/
+				'pathToJS'		: '//arduino.land/JS/SyntaxHighlighter/',	/** Location of repo for JS files. **/
+				'pathToCSS'		: '//arduino.land/CSS/SyntaxHighlighter/',	/** Location of repo for CSS files. **/
+				'core'			: 'Moduino',	/** Theme core. **/
+				'brushes'		: [ 'Cpp' ],	/** Array of  brushes to use ( different languages ). **/
+				'theme'			: 'Moduino',	/** Theme CSS. **/
+				'cssExt'		: 'scss'		/** CSS source file extension. **/
 			}
 		},
 		
@@ -106,7 +110,7 @@ var Moduino = {
 		},		
 	},
 	
-	/** Debugging constants for use with the DBG() function. Use these values as they may change ( from an integer to a function! ). **/
+	/** Debugging constants for use with the Moduino.dbg() function. Use these values as they may change ( from an integer to a function! ). **/
 
 	'debug' : {
 		'notification'	: 0,
@@ -116,16 +120,56 @@ var Moduino = {
 	},
 	
 	
-	/** Calling this is function is necessary as it creates working variables. **/
-	
 	'init' : function(){
-		
-		//Add runtime data members.
-		this.debug.footerReady = false;
-		DBG();
-	},
 	
-	'dbg'	: function ( msg, code ){ DBG( msg, code || Moduino.debug.notification ); },
+		//Create console bar and thankyou note.
+		var footer = $( 'div#pagefooter.pagefooter' );
+		var pp = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="GYFSELTGAYHEY"><input type="hidden" name="lc" value="AU"><input type="hidden" name="item_name" value="Moduino"><input type="hidden" name="currency_code" value="AUD"><input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted"><input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online."><img alt="" border="0" src="https://www.paypalobjects.com/en_AU/i/scr/pixel.gif" width="1" height="1"></form>';
+		var dbg = this.config.internal.idPrefix + 'debugWindow';
+		
+		$( '<div id="' + dbg + '"><span><strong><a href="//arduino.land/Moduino/">Moduino</a></strong> created by Christopher Andrews. Released under MIT licence.</span>' + pp + '</div>' )
+			.insertAfter( 'div#pagefooter.pagefooter' )
+			.css({
+				'background-color'	: 'black',
+				'color' 			: 'white',
+				'border'			: '1px solid #eee',
+				'padding'			: '4px',
+				'width'				: '100%',
+				'text-align'		: 'center',
+				'vertical-align'	: 'middle'
+		});
+		
+		$( '#' + dbg + ' *' ).css({
+			'display'			: 'inline-block',
+			'margin' 			: '0',
+			'background-color'	: 'transparent',
+			'color'				: 'white',
+			'border'			: 'none'
+		});
+		
+		this.dbg = function ( str, level ){
+			var	config = Moduino.config.internal,
+				msgType;
+			
+			switch( level || Moduino.debug.notification ){
+				case 0: msgType = 'Notification'; break;
+				case 1: msgType = 'Warning'; break;
+				case 2: msgType = 'Error'; break;
+				case 3: msgType = 'Mod'; break;
+			}
+
+			var msg = 'Moduino{' + msgType + '}: ' + ( str ||	
+				"/r/n=======================================\r\n" +
+				"Thank you for using Moduino\r\n" +
+				"Written by:	Christopher Andrews" +
+				"/r/n=======================================\r\n" );
+			
+			if( !(typeof console === 'undefined') ) console.log( msg );
+		}
+		
+
+		this.dbg();
+	},
 	'dbgm'	: function ( msg ){ this.dbg( msg, Moduino.debug.mod ); }
 	
 };
@@ -146,6 +190,8 @@ function formatButton( b ){
 	});
 }
 
+/** selectElementText helper function from: http://stackoverflow.com/a/2838358/4057102 **/
+
 function selectElementText(el, win) {
     win = win || window;
     var doc = win.document, sel, range;
@@ -162,6 +208,8 @@ function selectElementText(el, win) {
     }
 }
 
+/** jQuery cachedScript extension from: http://api.jquery.com/jquery.getscript/ **/
+
 jQuery.cachedScript = function( url, options ) {
   options = $.extend( options || {}, {
     dataType: "script",
@@ -171,45 +219,39 @@ jQuery.cachedScript = function( url, options ) {
   return jQuery.ajax( options );
 };
 
+//
+
+/** jQuery innerText extension from: http://www.davidtong.me/innerhtml-innertext-textcontent-html-and-text/ **/
+
 $.fn.innerText = function(msg) {
 	 if (msg) {
 		if (document.body.innerText) {
-		   for (var i in this) {
-			  this[i].innerText = msg;
-		   }
+		   for (var i in this) this[i].innerText = msg;
 		} else {
-		   for (var i in this) {
-			  this[i].innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "");
-		   }
+		   for (var i in this) this[i].innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "");
 		}
 		return this;
 	 } else {
-		if (document.body.innerText) {
-		   return this[0].innerText;
-		} else {
-		   return this[0].innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "");
-		}
+		if (document.body.innerText)
+			return this[0].innerText;
+		else
+			return this[0].innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "");
 	 }
 };
 
-/*** 
-	Calling this is function is necessary as it creates working variables.
-***/
-$( function ( gq ){
+/** Moduino entry point. **/
 
-	var dhr = document.location.href;
+$( function (){
 
-	//Do nothing if not on forum pages.
-	if( dhr.indexOf( 'forum.arduino.cc' ) == -1 ) return;
-	
-	
-	
-	var isGlobalIndex		= false,
+	var dhr 				= document.location.href,
+		isGlobalIndex		= false,
 		isForumIndex		= false,
 		isThread			= false,
 		isNewReply			= false;
-	
-	
+		
+	//Do nothing if not on forum pages.
+	if( dhr.indexOf( 'forum.arduino.cc' ) == -1 ) return;
+
 	//Try determine page via its title string.
 	switch( $( 'title' ).first().text() ){
 	
@@ -232,7 +274,7 @@ $( function ( gq ){
 			bv( isNewReply ) ){
 	
 		case 0:
-			DBG( 'Page does not match any detection rule!', Moduino.debug.warning );
+			Moduino.dbg( 'Page does not match any detection rule!', Moduino.debug.warning );
 		case 1:
 		
 			GlobalMods();
@@ -243,9 +285,8 @@ $( function ( gq ){
 			break;
 			
 		default:
-			DBG( 'Page matches more than one rule!', Moduino.debug.error );
+			Moduino.dbg( 'Page matches more than one rule!', Moduino.debug.error );
 	}
-	
 });
 
 
@@ -256,56 +297,6 @@ $( function ( gq ){
 
 function bv( b ){ return b ? 1 : 0; }
 
-
-function DBG( str, level ){
-
-	var config = Moduino.config.internal;
-	
-	var thisConfig = Moduino[ 'config' ][ 'internal' ];
-
-	str = str ||	"/r/n=======================================\r\n" +
-					"Thank you for using Moduino\r\n" +
-					"Written by:	Christopher Andrews" +
-					"/r/n=======================================\r\n";
-	level = level || Moduino.debug.notification;
-	
-	
-	//Detect page footer
-	var footer = $( 'div#pagefooter.pagefooter' );
-	
-	if( !config.footerReady  && footer.length == 1 ){
-	
-		var dbg = config.idPrefix + 'debugWindow';
-		
-		footer.append( "<div id='" + dbg + "'></div>" );
-		
-		$( dbg ).css({
-			'background-color'	: 'black',
-			'color' 			: 'white',
-			'min-height'		: '100px'
-		});
-		
-		config.footerReady = true;
-	}
-	var msgType;
-	
-	switch( level ){
-		case 0: msgType = 'Notification'; break;
-		case 1: msgType = 'Warning'; break;
-		case 2: msgType = 'Error'; break;
-		case 3: msgType = 'Mod'; break;
-	}
-
-	var msg = 'Moduino{' + msgType + '}: ' + str;
-	
-	if( !(typeof console === 'undefined') ) console.log( msg );
-	
-	if( config.footerReady ){
-		$( config.idPrefix + 'debugWindow' ).html( msg );
-	}
-}
-
-
 /***
 	GlobalMods function.
 	
@@ -314,7 +305,7 @@ function DBG( str, level ){
 
 function GlobalMods(){ 
 
-	DBG( 'Running global junk' );
+	Moduino.dbg( 'Running global junk' );
 	
 	var config = Moduino.config.global;
 	
@@ -327,7 +318,7 @@ function GlobalMods(){
 		dRC.first().css( 'margin-right', '5px' );
 		
 		$(dRC[1])
-			.css({ 'cssText'	: 'max-width: none !important;', 'width' : config.resizeContent.value + '%' })
+			.css({ 'cssText'	: 'max-width: none !important;', 'width' : config.resizeContent.value })
 			.find( 'div#wrapper' )
 			.css( 'max-width', 'none' );
 	}
@@ -366,7 +357,7 @@ function GlobalMods(){
 		
 			$( 'div#page' ).css({
 				'max-width' : 'none',
-				'width'		: config.resizeContent.value + '%'
+				'width'		: config.resizeContent.value
 			});
 		}
 		
@@ -386,7 +377,7 @@ function GlobalMods(){
 ***/
 
 function GlobalIndexMods(){ 
-	DBG( 'Found global index' );
+	Moduino.dbg( 'Found global index' );
 }
 
 /***
@@ -394,7 +385,7 @@ function GlobalIndexMods(){
 ***/
 
 function ForumIndexMods( mode ){ 
-	DBG( 'Found forum index' );
+	Moduino.dbg( 'Found forum index' );
 	
 	var config = Moduino.config.index.forum;
 	
@@ -429,9 +420,7 @@ function ForumIndexMods( mode ){
 			$( '#description_board' ).prepend( '<button id="sticky-toggle" onClick="' + "$( '" + sel + "' ).toggle();" + '">Sticky Threads</button>' );
 			formatButton( '#sticky-toggle' ).css( 'float','right' );
 		}
-	}	
-	
-	
+	}
 }
 
 /***
@@ -442,7 +431,7 @@ function ThreadMods(){
 
 	var config = Moduino.config.thread;
 
-	DBG( 'Found thread' );
+	Moduino.dbg( 'Found thread' );
 	
 	
 	/*** Allow resizing of code containers ***/
@@ -512,57 +501,56 @@ function ThreadMods(){
 		Moduino.dbgm( txt = 'codeHighlighting' );
 		txt += ': ';
 		
+		var successCount = 0,
+			successHandler = function( s ){
+				if( ++successCount == chl.brushes.length + 1 ){
+				
+					Moduino.dbg( txt + 'Got all files!' );
+					
+					$( 'code.bbc_code' )
+						.css({
+							'padding'		: '0px',
+							'max-height'	: 'none',
+							'border'		: '1px solid #cfcfcf',
+							'position'		: 'relative'
+						})
+						.wrapInner( '<pre class="brush: cpp"></pre>' )
+						.children()
+						.each( function ( i, e ){ $(e).innerText( $(e).innerText() ); });
+						
+					SyntaxHighlighter.defaults.gutter = chl.lineNumbers;
+					SyntaxHighlighter.defaults.toolbar = false;
+					SyntaxHighlighter.highlight();
+					
+					if( config.code.hoverSelect  )
+						addHoverSelect( '.bbc_code', "$(this).parent().find( 'div.container' )[0]" );
+
+					//Fix code box height, as highlighted code is smaller than the standard SMF code.
+					$( '.bbc_code' ).each( function( i, e ){ 
+						$(e).css( 'height', ( $(e).find( '.syntaxhighlighter' )[0].scrollHeight > config.sizeableCode.value ? config.sizeableCode.value + 'px' : 'auto' ) );
+					});				
+				}},
+			failHandler = function (s){
+				Moduino.dbg( txt + 'AJAX Failed', Moduino.debug.error );
+			};
+			
 		//Insert syntax highlighter CSS
 		$('head')
 			.append('<link rel="stylesheet" href="' + chl.pathToCSS + 'shCore.' + chl.cssExt + '" type="text/css" />')
 			.append('<link rel="stylesheet" href="' + chl.pathToCSS + 'shCore' + chl.core + '.' + chl.cssExt + '" type="text/css" />')
-			.append('<link rel="stylesheet" href="' + chl.pathToCSS + 'shTheme' + chl.theme + '.' + chl.cssExt + '" type="text/css" />');		
-
-		//Get syntaxhighlighter code.
-		$.cachedScript( chl.pathToJS + 'shCore.js' )
-			.fail(function ( s ){ Moduino.dbg( txt + 'AJAX Failed', Moduino.debug.error ); })
-			.success( function ( s ){
+			.append('<link rel="stylesheet" href="' + chl.pathToCSS + 'shTheme' + chl.theme + '.' + chl.cssExt + '" type="text/css" />');
 			
-				Moduino.dbg( txt + 'Got shCore.js' );
-				
-				var successCount = 0;
-				
+		//Grab JavaScript.
+		$.cachedScript( chl.pathToJS + 'shCore.js' )
+			.fail( failHandler )
+			.success( function( s ){
 				$.each( chl.brushes, function ( i, e ){
-				
 					$.cachedScript( chl.pathToJS + 'shBrush' + e + '.js' )
-						.fail(function ( s ){ Moduino.dbg( txt + 'AJAX Failed', Moduino.debug.error ); })
-						.success( function ( s ){
-						
-							Moduino.dbg( txt + 'Got shBrush' + e + '.js' ); 
-							
-							if( ++successCount == chl.brushes.length ){
-							
-								$( 'code.bbc_code' )
-									.css({
-										'padding'		: '0px',
-										'max-height'	: 'none',
-										'border'		: '1px solid #cfcfcf',
-										'position'		: 'relative'
-									})
-									.wrapInner( '<pre class="brush: cpp"></pre>' )
-									.children()
-									.each( function ( i, e ){ $(e).innerText( $(e).innerText() ); });
-									
-								SyntaxHighlighter.defaults.gutter = chl.lineNumbers;
-								SyntaxHighlighter.defaults.toolbar = false;
-								SyntaxHighlighter.highlight();
-								
-								if( config.code.hoverSelect  )
-									addHoverSelect( '.bbc_code', "$(this).parent().find( 'div.container' )[0]" );
-
-								//Fix code box height, as highlighted code is smaller than the standard SMF code.
-								$( '.bbc_code' ).each( function( i, e ){ 
-									$(e).css( 'height', ( $(e).find( '.syntaxhighlighter' )[0].scrollHeight > config.sizeableCode.value ? config.sizeableCode.value + 'px' : 'auto' ) );
-								});
-							}
-						});
-				});				
-		});
+						.fail( failHandler )
+						.success( successHandler );				
+				});
+				successHandler( s );
+			});
 	}
 	
 	/*** Move code '[Select]' function to hover over ***/
@@ -575,10 +563,15 @@ function ThreadMods(){
 			addHoverSelect( '.bbc_code' );
 	}
 	
+	
+	/*** Quote modifications. ***/
+	
 	if( config.quote.enabled ){
 
 		Moduino.dbgm( 'quote' );
 	
+		/*** Hide the header if empty, or shrink it. ***/
+		
 		$( '.quoteheader' ).each(function ( i, e ){
 			if( config.quote.hideEmptyHead && $(e).children().text() === 'Quote' )
 				$(e).hide();
@@ -586,7 +579,7 @@ function ThreadMods(){
 				$(e).css( 'padding', '0 4px' );
 		});
 		
-		
+		/*** Add the ability to select a quotes text. ***/
 		
 		if( config.quote.hoverSelect  ){
 		
@@ -595,6 +588,8 @@ function ThreadMods(){
 			addHoverSelect( '.bbc_standard_quote', "$(this).parent().find('div').first()[0]" )
 				.css( 'padding', '4px 4px' );
 		}
+		
+		/*** Allow custom colours used with quotes. (like old forum) ***/
 	
 		if( config.quote.colours != false ){
 		
@@ -603,7 +598,6 @@ function ThreadMods(){
 			$( '.bbc_standard_quote' ).css({
 				'background-color' : config.quote.colours[ 1 ],
 				'border' : '1px solid ' + config.quote.colours[ 2 ],
-				'margin-bottom' : '-1px'
 			});
 			
 			$( '.quoteheader' ).css({
@@ -613,14 +607,13 @@ function ThreadMods(){
 			});			
 		}
 	}
-	
-	return;
 }
 
 function addHoverSelect( owner, what ){
 
 		what = what || 'this';
 
+		//Handler to reposition hover box if page scrolls ( when container scroll reaches the bottom ).
 		var handler = function(){
 			$( '.select-all-hover' )
 				.filter( ':visible' )
@@ -652,43 +645,5 @@ function addHoverSelect( owner, what ){
 ***/
 
 function ReplyMods(){ 
-	DBG( 'Found reply' );
+	Moduino.dbg( 'Found reply' );
 }
-
-
-/*
-'<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">'
- + '<input type="hidden" name="cmd" value="_donations">'
- + '<input type="hidden" name="business" value="GYFSELTGAYHEY">'
- + '<input type="hidden" name="lc" value="AU">'
- + '<input type="hidden" name="item_name" value="Moduino">'
- + '<input type="hidden" name="currency_code" value="AUD">'
- + '<input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted">'
- + '<input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online.">'
- + '<img alt="" border="0" src="https://www.paypalobjects.com/en_AU/i/scr/pixel.gif" width="1" height="1">'
- + '</form>'
-*/
-/*** UNUSED CODE
-
-function isDef( d ){
-	return typeof( d ) == "undefined";
-}
-
-function isObj( obj ){
-	return !isDef( obj ) && typeof( obj ) == "object";
-}
-
-function isFunc( func ){
-	return !isDef( func ) && typeof( func ) == "function";
-}
-
-function htmlEscape(str) {
-    return String(str)
-            .replace(/&/g, '&amp;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
-}
-***/
-
