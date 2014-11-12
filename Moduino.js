@@ -123,6 +123,10 @@ var Moduino = {
 		'mod'			: 3
 	},
 	
+	'capFirst' : function( s ){
+		return s.charAt(0).toUpperCase() + s.slice(1);
+	},
+	
 	
 	'init' : function(){
 	
@@ -134,7 +138,7 @@ var Moduino = {
 		$(	'<div id="' + dbg + '"><span><strong><a href="//arduino.land/Moduino/">Moduino</a></strong> ' 
 			+ 'written by Christopher Andrews. Released under MIT licence.</span>' 
 			+ '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="GYFSELTGAYHEY"><input type="hidden" name="lc" value="AU"><input type="hidden" name="item_name" value="Moduino"><input type="hidden" name="currency_code" value="AUD"><input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted"><input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online."><img alt="" border="0" src="https://www.paypalobjects.com/en_AU/i/scr/pixel.gif" width="1" height="1"></form>'  
-			+ '<a href="https://github.com/Chris--A/Moduino" target="_blank"><span>Bugs/Requests: </span><img id="'
+			+ '<span>Bugs/Requests: </span><a href="https://github.com/Chris--A/Moduino" target="_blank"><img id="'
 			+ this.config.internal.idPrefix + 'octo" src="//arduino.land/Images/ArduinoForum/Octocat.png" width="40" height="34"></a></div>'
 		).insertAfter( 'div#pagefooter.pagefooter' )
 			.css({
@@ -161,30 +165,27 @@ var Moduino = {
 		});
 		
 		this.dbg = function ( str, level ){
-			var	config = Moduino.config.internal,
-				msgType;
-			
-			switch( level || Moduino.debug.notification ){
-				case 0: msgType = 'Notification'; break;
-				case 1: msgType = 'Warning'; break;
-				case 2: msgType = 'Error'; break;
-				case 3: msgType = 'Mod'; break;
-			}
+			var	config = Moduino.config.internal, msgType;
+
+			$.each( Moduino.debug, function( k,v ){ 
+				return ( v == ( level || Moduino.debug.notification ) ) ? ( msgType = Moduino.capFirst(k), false ) : true; });
 
 			var msg = 'Moduino{' + msgType + '}: ' + ( str ||	
-				"/r/n=======================================\r\n" +
+				"\r\n=======================================\r\n" +
 				"Thank you for using Moduino\r\n" +
-				"Written by:	Christopher Andrews" +
-				"/r/n=======================================\r\n" );
+				"Written by:	Christopher Andrews\r\n" +
+				"http://arduino.land/Moduino/ 2014" +
+				"\r\n=======================================\r\n" );
 			
 			if( !(typeof console === 'undefined') ) console.log( msg );
 		}
 		
-
 		this.dbg();
 	},
 	'dbgm'		: function ( msg )	{ this.dbg( msg, Moduino.debug.mod ); },
 	'isTrue'	: function ( x )	{ return !!x; }
+	
+	
 };
 var Mo = Moduino;
 
@@ -302,7 +303,7 @@ $( function (){
 			isForumIndex = ( /http:\/\/forum.arduino.cc\/index.php\?board=[0-9.]*/ ).test( dhr );
 	}
 
-	Moduino.init();
+	Mo.init();
  
 	switch( bv( isGlobalIndex ) +
 			bv( isForumIndex ) +
@@ -310,7 +311,7 @@ $( function (){
 			bv( isNewReply ) ){
 	
 		case 0:
-			Moduino.dbg( 'Page does not match any detection rule!', Moduino.debug.warning );
+			Mo.dbg( 'Page does not match any detection rule!', Mo.debug.warning );
 		case 1:
 		
 			GlobalMods();
@@ -321,7 +322,7 @@ $( function (){
 			break;
 			
 		default:
-			Moduino.dbg( 'Page matches more than one rule!', Moduino.debug.error );
+			Mo.dbg( 'Page matches more than one rule!', Mo.debug.error );
 	}
 });
 
@@ -343,13 +344,13 @@ function bv( b ){ return b ? 1 : 0; }
 
 function GlobalMods(){ 
 
-	Moduino.dbg( 'Running global junk' );
+	Mo.dbg( 'Running global junk' );
 	
-	var config = Moduino.config.global;
+	var config = Mo.config.global;
 	
 	if( config.resizeContent.enabled ){
 
-		Moduino.dbgm( 'resizeContent' );
+		Mo.dbgm( 'resizeContent' );
 		
 		var dRC = $( 'div.row.collapse' );
 		
@@ -365,7 +366,7 @@ function GlobalMods(){
 	
 	if( config.minimizeHeader.enabled ){
 	
-		Moduino.dbgm( 'minimizeHeader' );
+		Mo.dbgm( 'minimizeHeader' );
 		
 		//Remove colour from page.
 		$( 'body' ).css( 'background', 'none' );
@@ -409,7 +410,7 @@ function GlobalMods(){
 	/** Hide the damn shopping cart. **/
 	
 	if( config.removeShopping ){
-		Moduino.dbgm( 'removeShopping' );
+		Mo.dbgm( 'removeShopping' );
 		$( 'li' ).find( '.cart' ).hide();
 	}
 	
@@ -417,7 +418,7 @@ function GlobalMods(){
 	/** Prevent nav from sticking to page while scrolling down. **/
 	
 	if( config.preventScrollNav ){
-		Moduino.dbgm( 'preventScrollNav' );
+		Mo.dbgm( 'preventScrollNav' );
 		$( window ).scroll( function(){ 
 			if($('#navWrapper' ).is( '.fixed' ))		$('#navWrapper' ).removeClass( 'fixed' );
 			if($('#menuWings' ).hide().is( '.fixed' ))	$('#menuWings' ).removeClass( 'fixed' );
@@ -433,13 +434,13 @@ function GlobalMods(){
 
 function GlobalIndexMods(){ 
 
-	Moduino.dbg( 'Found global index' );
+	Mo.dbg( 'Found global index' );
 
-	var config = Moduino.config.index.root;
+	var config = Mo.config.index.root;
 	
 	if( config.shrinkBoardList ){
 	
-		Moduino.dbgm( 'shrinkBoardList' );
+		Mo.dbgm( 'shrinkBoardList' );
 		$( 'div.stats' ).css( 'padding', '5px 0 0 0' );
 		
 		$( '.info.home-s' )
@@ -456,13 +457,13 @@ function GlobalIndexMods(){
 ***/
 
 function ForumIndexMods( mode ){ 
-	Moduino.dbg( 'Found forum index' );
+	Mo.dbg( 'Found forum index' );
 	
-	var config = Moduino.config.index.forum;
+	var config = Mo.config.index.forum;
 	
 	if( config.shrinkContainers ){
 	
-		Moduino.dbgm( 'shrinkContainers' );
+		Mo.dbgm( 'shrinkContainers' );
 		$( '#topic_container>.windowbg' )
 			.height( 'auto' )
 			.css({ 'border' : '0' })
@@ -474,7 +475,7 @@ function ForumIndexMods( mode ){
 	
 	if( config.removeMenu ){
 	
-		Moduino.dbgm( 'removeMenu' );
+		Mo.dbgm( 'removeMenu' );
 		$( '#wrapper>#upper_section' ).hide();
 	}
 	
@@ -483,7 +484,7 @@ function ForumIndexMods( mode ){
 	
 	if( config.sticky.enabled && $(sel).length ){
 	
-		Moduino.dbgm( 'sticky' );
+		Mo.dbgm( 'sticky' );
 		
 		if( config.sticky.hide ) $(sel).hide();
 			
@@ -500,16 +501,16 @@ function ForumIndexMods( mode ){
 
 function ThreadMods(){
 
-	var config = Moduino.config.thread;
+	var config = Mo.config.thread;
 
-	Moduino.dbg( 'Found thread' );
+	Mo.dbg( 'Found thread' );
 	
 	
 	/*** Allow resizing of code containers ***/
 	
 	if( config.sizeableCode.enabled ){
 	
-		Moduino.dbgm( 'sizeableCode' );
+		Mo.dbgm( 'sizeableCode' );
 		
 		$( '.bbc_code' ).each( function( i, e ){ 
 			$(e).css({ 
@@ -523,7 +524,7 @@ function ThreadMods(){
 	
 	if( config.hideIP ){
 	
-		Moduino.dbgm( 'hideIP' );
+		Mo.dbgm( 'hideIP' );
 		$( 'li.poster_ip' ).hide();
 	}
 	
@@ -531,7 +532,7 @@ function ThreadMods(){
 	
 	if( config.shrinkPost ){
 	
-		Moduino.dbgm( 'shrinkPost' );
+		Mo.dbgm( 'shrinkPost' );
 		
 		$( 'div#upper_section' ).hide();
 
@@ -547,7 +548,7 @@ function ThreadMods(){
 	
 	if( config.combineKarma ){
 	
-		Moduino.dbgm( 'combineKarma' );
+		Mo.dbgm( 'combineKarma' );
 		$( 'li.custom.karma_good' ).wrapInner(function(){ 
 			return '<a href="' + $(this).siblings( '.karma_labels' ).hide().children( 'a' ).attr( 'href' ) + '"></a>'; 
 		});
@@ -557,7 +558,7 @@ function ThreadMods(){
 	
 	if( config.hideProfileLink ){
 	
-		Moduino.dbgm( 'hideProfileLink' );
+		Mo.dbgm( 'hideProfileLink' );
 		$( 'li.link-profile' ).hide();
 
 	}
@@ -569,14 +570,14 @@ function ThreadMods(){
 		var chl = config.codeHighlighting,
 		txt;
 	
-		Moduino.dbgm( txt = 'codeHighlighting' );
+		Mo.dbgm( txt = 'codeHighlighting' );
 		txt += ': ';
 		
 		var successCount = 0,
 			successHandler = function( s ){
 				if( ++successCount == chl.brushes.length + 1 ){
 				
-					Moduino.dbg( txt + 'Got all files!' );
+					Mo.dbg( txt + 'Got all files!' );
 					
 					$( 'code.bbc_code' )
 						.css({
@@ -602,7 +603,7 @@ function ThreadMods(){
 					});				
 				}},
 			failHandler = function (s){
-				Moduino.dbg( txt + 'AJAX Failed', Moduino.debug.error );
+				Mo.dbg( txt + 'AJAX Failed', Mo.debug.error );
 			};
 			
 		//Insert syntax highlighter CSS
@@ -628,7 +629,7 @@ function ThreadMods(){
 	
 	if( config.code.hoverSelect  ){
 	
-		Moduino.dbgm( 'code.hoverSelect' );
+		Mo.dbgm( 'code.hoverSelect' );
 		$( '.codeheader' ).hide();
 		if( !config.codeHighlighting.enabled )
 			addHoverSelect( '.bbc_code' );
@@ -639,7 +640,7 @@ function ThreadMods(){
 	
 	if( config.quote.enabled ){
 
-		Moduino.dbgm( 'quote' );
+		Mo.dbgm( 'quote' );
 	
 		/*** Hide the header if empty, or shrink it. ***/
 		
@@ -654,7 +655,7 @@ function ThreadMods(){
 		
 		if( config.quote.hoverSelect  ){
 		
-			Moduino.dbgm( 'quote.hoverSelect' );
+			Mo.dbgm( 'quote.hoverSelect' );
 			$( '.bbc_standard_quote' ).wrapInner( '<div></div>' );
 			addHoverSelect( '.bbc_standard_quote', "$(this).parent().find('div').first()[0]" )
 				.css( 'padding', '4px 4px' );
@@ -664,7 +665,7 @@ function ThreadMods(){
 	
 		if( config.quote.colours != false ){
 		
-			Moduino.dbgm( 'quote.colours' );
+			Mo.dbgm( 'quote.colours' );
 			
 			$( '.bbc_standard_quote' ).css({
 				'background-color' : config.quote.colours[ 1 ],
@@ -682,7 +683,7 @@ function ThreadMods(){
 	
 		if( config.quote.trimBreaks ){
 		
-			Moduino.dbgm( 'quote.trimBreaks' );
+			Mo.dbgm( 'quote.trimBreaks' );
 			$( 'blockquote.bbc_standard_quote' ).each( function( i, e ){
 				$(e).children( 'div' ).html( $(e).children( 'div' ).html().replace( /(<br>\s*)+$/, '' ) );
 			});
@@ -726,5 +727,5 @@ function addHoverSelect( owner, what ){
 ***/
 
 function ReplyMods(){ 
-	Moduino.dbg( 'Found reply' );
+	Mo.dbg( 'Found reply' );
 }
