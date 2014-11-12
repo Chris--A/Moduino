@@ -6,13 +6,16 @@ Moduino is a JavaScript modding system for the public forum found at http://foru
 Written by:	Christopher Andrews
 Licence:	Released using MIT licence.
 
-There are currently 17 modifications available. Each mod can be disabled in the config.
+There are currently 18 modifications available. Each mod can be disabled in the config.
 
 ### Global forum modifications
 
 * Resize width of content.
 * Shrink the page banner.
 * Remove shopping icon.
+
+### Root index modifications
+* Shrink content
 
 ### Forum index modifications
 
@@ -33,9 +36,9 @@ There are currently 17 modifications available. Each mod can be disabled in the 
     * Syntax highlighting
     * Line numbers
     * Move select all to a hover over.
-  *Quote mods
+  * Quote mods
     * Hide empty headers
-	* Change colours
+	* Change colours; This also fixes '*quotes in quotes (2d)*'
 	* Add select all hover over.
 
 
