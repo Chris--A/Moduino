@@ -22,7 +22,8 @@ var Moduino = {
 				'useContentWidth'	: true		/** Resize to width of page content if enabled ( config.global.resizeContent ). **/
 			},
 			
-			'removeShopping' : true				/** Remove the shopping cart icon. **/
+			'removeShopping'	: true,			/** Remove the shopping cart icon. **/
+			'preventScrollNav'	: true			/** Prevent nav from sticking to page while scrolling down. **/
 		},
 		
 		'index' : {
@@ -59,6 +60,7 @@ var Moduino = {
 				'enabled' 		: true,
 				'hoverSelect'	: true,			/** Allow selection of quote text using a hover over **/
 				'hideEmptyHead'	: true,			/** Hide the header if all it contains is 'Quote'. **/
+				'trimBreaks'	: true,			/*** Remove excess <br> tags from end of quote. ***/
 				'colours'		: [ 
 					'#e4e4e4', 					/** Quote header background. **/
 					'rgba(250, 242, 0, 0.28)',	/** Quote content background. **/
@@ -125,16 +127,20 @@ var Moduino = {
 	
 		//Create console bar and thankyou note.
 		var footer = $( 'div#pagefooter.pagefooter' );
-		var pp = '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="GYFSELTGAYHEY"><input type="hidden" name="lc" value="AU"><input type="hidden" name="item_name" value="Moduino"><input type="hidden" name="currency_code" value="AUD"><input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted"><input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online."><img alt="" border="0" src="https://www.paypalobjects.com/en_AU/i/scr/pixel.gif" width="1" height="1"></form>';
-		var dbg = this.config.internal.idPrefix + 'debugWindow';
+		var dbg = this.config.internal.idPrefix + 'footer';
 		
-		$( '<div id="' + dbg + '"><span><strong><a href="//arduino.land/Moduino/">Moduino</a></strong> created by Christopher Andrews. Released under MIT licence.</span>' + pp + '</div>' )
-			.insertAfter( 'div#pagefooter.pagefooter' )
+		//Add footer to page.
+		$(	'<div id="' + dbg + '"><span><strong><a href="//arduino.land/Moduino/">Moduino</a></strong> ' 
+			+ 'written by Christopher Andrews. Released under MIT licence.</span>' 
+			+ '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="GYFSELTGAYHEY"><input type="hidden" name="lc" value="AU"><input type="hidden" name="item_name" value="Moduino"><input type="hidden" name="currency_code" value="AUD"><input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted"><input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online."><img alt="" border="0" src="https://www.paypalobjects.com/en_AU/i/scr/pixel.gif" width="1" height="1"></form>'  
+			+ '<a href="https://github.com/Chris--A/Moduino" target="_blank"><img id="'
+			+ this.config.internal.idPrefix + 'octo" src="//arduino.land/Images/ArduinoForum/Octocat.png" width="40" height="34"></a></div>'
+		).insertAfter( 'div#pagefooter.pagefooter' )
 			.css({
 				'background-color'	: 'black',
 				'color' 			: 'white',
 				'border'			: '1px solid #eee',
-				'padding'			: '4px',
+				'padding'			: '6px',
 				'width'				: '100%',
 				'text-align'		: 'center',
 				'vertical-align'	: 'middle'
@@ -142,10 +148,15 @@ var Moduino = {
 		
 		$( '#' + dbg + ' *' ).css({
 			'display'			: 'inline-block',
-			'margin' 			: '0',
+			'margin' 			: '0 2px 0 0',
 			'background-color'	: 'transparent',
-			'color'				: 'white',
 			'border'			: 'none'
+		});
+		
+		$( '#' + this.config.internal.idPrefix + 'octo' ).css({
+			'border-radius': '20px',
+			'-webkit-border-radius': '20px',
+			'-moz-border-radius': '20px'
 		});
 		
 		this.dbg = function ( str, level ){
@@ -372,8 +383,21 @@ function GlobalMods(){
 	/** Hide the damn shopping cart. **/
 	
 	if( config.removeShopping ){
+		Moduino.dbgm( 'removeShopping' );
 		$( 'li' ).find( '.cart' ).hide();
 	}
+	
+	
+	/** Prevent nav from sticking to page while scrolling down. **/
+	
+	if( config.preventScrollNav ){
+		Moduino.dbgm( 'preventScrollNav' );
+		$( window ).scroll( function(){ 
+			if($('#navWrapper' ).is( '.fixed' ))		$('#navWrapper' ).removeClass( 'fixed' );
+			if($('#menuWings' ).hide().is( '.fixed' ))	$('#menuWings' ).removeClass( 'fixed' );
+		});
+	}	
+	
 }
 
 
@@ -390,7 +414,7 @@ function GlobalIndexMods(){
 	if( config.shrinkBoardList ){
 	
 		Moduino.dbgm( 'shrinkBoardList' );
-		$( 'div.stats' ).css( 'padding', '0' );
+		$( 'div.stats' ).css( 'padding', '5px 0 0 0' );
 		
 		$( '.info.home-s' )
 			.css( 'min-height', 'inherit' )
@@ -625,6 +649,16 @@ function ThreadMods(){
 				'border' : '1px solid ' + config.quote.colours[ 2 ],
 				'margin-bottom' : '-1px'
 			});			
+		}
+		
+		/*** Remove excess <br> tags from end of quote. ***/
+	
+		if( config.quote.trimBreaks ){
+		
+			Moduino.dbgm( 'quote.trimBreaks' );
+			$( 'blockquote.bbc_standard_quote' ).each( function( i, e ){
+				$(e).children( 'div' ).html( $(e).children( 'div' ).html().replace( /(<br>\s*)+$/, '' ) );
+			});
 		}
 	}
 }
