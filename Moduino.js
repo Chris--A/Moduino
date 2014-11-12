@@ -31,7 +31,8 @@ var Moduino = {
 			
 			'root' : {
 				'enabled'			: true,
-				'shrinkBoardList'	: true
+				'shrinkBoardList'	: true,
+				'hideDescription'	: true		/** Hide each forums description in listing. **/
 			},
 			
 			'forum' : {
@@ -133,7 +134,7 @@ var Moduino = {
 		$(	'<div id="' + dbg + '"><span><strong><a href="//arduino.land/Moduino/">Moduino</a></strong> ' 
 			+ 'written by Christopher Andrews. Released under MIT licence.</span>' 
 			+ '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top"><input type="hidden" name="cmd" value="_donations"><input type="hidden" name="business" value="GYFSELTGAYHEY"><input type="hidden" name="lc" value="AU"><input type="hidden" name="item_name" value="Moduino"><input type="hidden" name="currency_code" value="AUD"><input type="hidden" name="bn" value="PP-DonationsBF:btn_donate_LG.gif:NonHosted"><input type="image" src="https://www.paypalobjects.com/en_AU/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal — The safer, easier way to pay online."><img alt="" border="0" src="https://www.paypalobjects.com/en_AU/i/scr/pixel.gif" width="1" height="1"></form>'  
-			+ '<a href="https://github.com/Chris--A/Moduino" target="_blank"><img id="'
+			+ '<a href="https://github.com/Chris--A/Moduino" target="_blank"><span>Bugs/Requests: </span><img id="'
 			+ this.config.internal.idPrefix + 'octo" src="//arduino.land/Images/ArduinoForum/Octocat.png" width="40" height="34"></a></div>'
 		).insertAfter( 'div#pagefooter.pagefooter' )
 			.css({
@@ -182,9 +183,10 @@ var Moduino = {
 
 		this.dbg();
 	},
-	'dbgm'	: function ( msg ){ this.dbg( msg, Moduino.debug.mod ); }
-	
+	'dbgm'		: function ( msg )	{ this.dbg( msg, Moduino.debug.mod ); },
+	'isTrue'	: function ( x )	{ return !!x; }
 };
+var Mo = Moduino;
 
 /***
 	Helper functions and jQuery add ons.
@@ -251,6 +253,28 @@ $.fn.innerText = function(msg) {
 	 }
 };
 
+/*!
+ * iff - v0.2 - 6/3/2009
+ * http://benalman.com/projects/jquery-iff-plugin/
+ * 
+ * Copyright (c) 2009 "Cowboy" Ben Alman
+ * Licensed under the MIT license
+ * http://benalman.com/about/license/
+ */
+
+(function($){
+  '$:nomunge'; // Used by YUI compressor.
+  
+  $.fn.iff = function( test ) {
+    var elems = !test || $.isFunction( test )
+      && !test.apply( this, Array.prototype.slice.call(arguments, 1) )
+      ? []
+      : this;
+    return this.pushStack( elems, 'iff', test );
+  };
+  
+})(jQuery);
+
 /** Moduino entry point. **/
 
 $( function (){
@@ -300,6 +324,8 @@ $( function (){
 			Moduino.dbg( 'Page matches more than one rule!', Moduino.debug.error );
 	}
 });
+
+
 
 
 /***
@@ -418,6 +444,7 @@ function GlobalIndexMods(){
 		
 		$( '.info.home-s' )
 			.css( 'min-height', 'inherit' )
+			.iff( Mo.isTrue, config.hideDescription )
 			.children( '.subject' )
 			.next( 'p' )
 			.hide();
