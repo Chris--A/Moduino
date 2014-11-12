@@ -29,7 +29,8 @@ var Moduino = {
 			'enabled' : true,
 			
 			'root' : {
-				'enabled' : true
+				'enabled'			: true,
+				'shrinkBoardList'	: true
 			},
 			
 			'forum' : {
@@ -37,7 +38,7 @@ var Moduino = {
 				'shrinkContainers'	: true,		/** Minimize thread listing sizes. **/
 				'removeMenu'		: true,		/** There is currently an empty menu bar above thread listing. (17px high) **/
 				
-				'sticky' 			: {
+				'sticky' : {
 					'enabled'	: true,			
 					'hide'		: true,			/** Hide sticky threads **/
 					'addToggle'	: true			/** Add a button to toggle visibility **/
@@ -337,9 +338,13 @@ function GlobalMods(){
 		})
 			.children( 'div.row' )
 			.first()
-			.css( 'padding-left', '3px' );
+			.css( 'padding-left', '3px' )
+			.find( 'div.title' )
+			.css( 'margin-bottom', '0' );
 		
 		$( 'nav.top-bar' ).css( 'margin', '0 3px 0 0' );
+		
+		
 		
 		//Remove margin from bread crumbs and move to header navigation.
 		$( '#headerbread' )
@@ -377,7 +382,22 @@ function GlobalMods(){
 ***/
 
 function GlobalIndexMods(){ 
+
 	Moduino.dbg( 'Found global index' );
+
+	var config = Moduino.config.index.root;
+	
+	if( config.shrinkBoardList ){
+	
+		Moduino.dbgm( 'shrinkBoardList' );
+		$( 'div.stats' ).css( 'padding', '0' );
+		
+		$( '.info.home-s' )
+			.css( 'min-height', 'inherit' )
+			.children( '.subject' )
+			.next( 'p' )
+			.hide();
+	}
 }
 
 /***
