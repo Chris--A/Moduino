@@ -3,11 +3,14 @@
 
 Moduino is a JavaScript modding system for the public forum found at http://forum.arduino.cc
 
-Written by:	Christopher Andrews
-Licence:	Released using GPL licence.
+*Written by:*	Christopher Andrews.
+
+*Licence:*	Released using GPL licence.
 
 > _**`8 Dec 2014`**_
+  
   ###This system is still under construction. 
+  
   Its stable and ready to go, however I still need to create usage instructions on the homepage.
 
 Once some new improvements are added, no installation may be necessary at all. However this is still only a plan.
