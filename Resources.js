@@ -1,15 +1,12 @@
 
 var __MODUINO__RESOURCES_LOADED__ = true;
 
-
-
-
 /*** 
 	The code below is sourced from around the inernet. 
 ***/
 
 
-/** selectElementText helper function from: http://stackoverflow.com/a/2838358/4057102 **/
+/*! selectElementText helper function from: http://stackoverflow.com/a/2838358/4057102 **/
 
 function selectElementText(el, win) {
     win = win || window;
@@ -27,7 +24,7 @@ function selectElementText(el, win) {
     }
 }
 
-/** jQuery cachedScript extension from: http://api.jquery.com/jquery.getscript/ **/
+/*! jQuery cachedScript extension from: http://api.jquery.com/jquery.getscript/ **/
 
 jQuery.cachedScript = function( url, options ) {
   options = $.extend( options || {}, {
@@ -39,7 +36,7 @@ jQuery.cachedScript = function( url, options ) {
 };
 
 
-/** jQuery innerText extension from: http://www.davidtong.me/innerhtml-innertext-textcontent-html-and-text/ **/
+/*! jQuery innerText extension from: http://www.davidtong.me/innerhtml-innertext-textcontent-html-and-text/ **/
 
 $.fn.innerText = function(msg) {
 	 if (msg) {
