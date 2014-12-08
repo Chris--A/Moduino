@@ -4,9 +4,9 @@
 Moduino is a JavaScript modding system for the public forum found at http://forum.arduino.cc
 
 Written by:	Christopher Andrews
-Licence:	Released using MIT licence.
+Licence:	Released using GPL licence.
 
-There are currently 21 modifications available. Each mod can be disabled in the configuration.
+There are currently 23 modifications available. Each mod can be disabled in the configuration.
 
 For a preview and instructions, visit http://arduino.land/Moduino/
 
@@ -16,6 +16,7 @@ For a preview and instructions, visit http://arduino.land/Moduino/
 * Shrink the page banner.
 * Remove shopping icon.
 * Prevent navigation sticking to page top while scrolling.
+* Add a 'last posts' link.
 
 #### Root index modifications.
 * Shrink content.
@@ -30,6 +31,7 @@ For a preview and instructions, visit http://arduino.land/Moduino/
 #### In thread modifications.
 
 * Shrink post containers.
+* Disable using quick reply when quoting a post.
 * **Profile mods**:
 	* Combine *[Add Karma]* link with user karma count.
 	* Hide IP text.
