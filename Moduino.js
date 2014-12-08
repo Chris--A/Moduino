@@ -1,3 +1,21 @@
+/***
+	Moduino, A modification system for the Arduino.cc forums.
+    Copyright (C) 2014  Christopher Andrews
+	http://arduino.land/Moduino/
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+***/
 
 var Moduino = {
 
@@ -112,7 +130,7 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':0,'revision':32},				/** Version data for this copy of Moduino. **/
+				'components':{'major':0,'minor':0,'revision':39},				/** Version data for this copy of Moduino. **/
 				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 	/** URI returning the latest version number JSON. **/
 				'checkFrequency' : 600, 										/** Time in seconds between checking for updates (default: 10 mins). **/
 			},
@@ -268,12 +286,12 @@ var Moduino = {
 
 				$.getJSON( cv.versionCheckJSON, function( data ){
 					setState( data );
-					Mo.setting.set( 'last-check', Mo.unixTime() );
-					Mo.setting.set( 'latest-version', data );
+					Mo.setting.update( 'last-check', Mo.unixTime() );
+					Mo.setting.update( 'latest-version', data );
 				}).fail( function (){ setImg( 'orange', 'Unable to check for updates at this time.' ); });
 			
 			}else{
-				var data = this.setting.get( 'latest-version' );//this.cookie.get( 'latest-version' );
+				var data = this.setting.get( 'latest-version' );
 
 				if( data == null ){
 					this.setting.remove( 'last-check' );
@@ -431,7 +449,7 @@ var Moduino = {
 			Moduino.dbg = function ( str, level ){
 				var	config = Moduino.config.internal, msgType;
 				$.each( Moduino.debug, function( k,v ){ return ( v == ( level || Moduino.debug.notification ) ) ? ( msgType = Moduino.capFirst(k), false ) : true; });
-				var msg = 'Moduino{' + msgType + '}: ' + ( str || "\r\n=======================================\r\nThank you for using Moduino\r\nWritten by:	Christopher Andrews\r\nhttp://arduino.land/Moduino/ 2014\r\n=======================================\r\n" );
+				var msg = 'Moduino{' + msgType + '}: ' + ( str || "\r\n=======================================\r\nThank you for using Moduino\r\nWritten by:	Christopher Andrews\r\nhttp://arduino.land/Moduino/ 2014\r\nReleased using GPL licence\r\n=======================================\r\n" );
 				if( !(typeof console === 'undefined') ) console.log( msg );
 			}
 			
