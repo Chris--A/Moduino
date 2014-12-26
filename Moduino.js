@@ -131,7 +131,7 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':0,'revision':39},				/** Version data for this copy of Moduino. **/
+				'components':{'major':0,'minor':0,'revision':40},				/** Version data for this copy of Moduino. **/
 				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 	/** URI returning the latest version number JSON. **/
 				'checkFrequency' : 600, 										/** Time in seconds between checking for updates (default: 10 mins). **/
 			},
@@ -305,6 +305,8 @@ var Moduino = {
 	'initialized' : false,
 	
 	'init' : function( autoRun ){
+	
+		
 	
 		//Create console bar and thankyou note.
 		var cint = this.config.internal;
@@ -498,7 +500,7 @@ var Moduino = {
 				isThread = !!$( 'span#top_subject' ).length;
 				
 				//Detect forum index.
-				isForumIndex = ( /https?:\/\/forum.arduino.cc\/(index.php)?\?board=[0-9.]*/ ).test( document.location.href );
+				isForumIndex = ( /https?:\/\/forum.arduino.cc\/(index.php)?\?(\w*=\w*&)?board=[0-9.]*/ ).test( document.location.href );
 		}
 		
 		switch( bv( isGlobalIndex ) +
