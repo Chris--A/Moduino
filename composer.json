@@ -1,3 +1,14 @@
 {
-	"name":        "Chris--A/Moduino"
+    "name":        "Chris--A/Moduino",
+    "description": "A modification system for the Arduino.cc forums.",
+    "keywords":    [ "Moduino" ],
+    "homepage":    "http://arduino.land/Moduino/",
+    "license":     "GPL 2.0",
+    "type":        "application",
+    "authors": [
+        {
+            "name":  "Christopher Andrews",
+            "email": "chris@arduino.land"
+        }
+    ],	
 }

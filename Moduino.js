@@ -131,9 +131,9 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':0,'revision':40},				/** Version data for this copy of Moduino. **/
+				'components':{'major':0,'minor':0,'revision':41},				/** Version data for this copy of Moduino. **/
 				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 	/** URI returning the latest version number JSON. **/
-				'checkFrequency' : 600, 										/** Time in seconds between checking for updates (default: 10 mins). **/
+				'checkFrequency' : 1800, 										/** Time in seconds between checking for updates (default: 30 mins). **/
 			},
 			'fontAwesome'	: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', /** Path to font awesome, default is Twitters Bootstrap CDN **/
 			'jQueryUI'		: '//code.jquery.com/ui/1.11.2/jquery-ui.min.js',
@@ -839,7 +839,9 @@ function ThreadMods(){
 
 					//Fix code box height, as highlighted code is smaller than the standard SMF code.
 					$( '.bbc_code' ).each( function( i, e ){ 
-						$(e).css( 'height', ( $(e).find( '.syntaxhighlighter' )[0].scrollHeight > config.sizeableCode.value ? config.sizeableCode.value + 'px' : 'auto' ) );
+						$(e).css( 'height', ( $(e).find( '.syntaxhighlighter' )[0].scrollHeight > config.sizeableCode.value ? config.sizeableCode.value + 'px' : 'auto' ) )
+							.children()
+							.css( 'display', 'inline-block' );
 					});				
 				}},
 			failHandler = function (s){
