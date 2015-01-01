@@ -131,7 +131,7 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':0,'revision':42},				/** Version data for this copy of Moduino. **/
+				'components':{'major':0,'minor':0,'revision':43},				/** Version data for this copy of Moduino. **/
 				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 	/** URI returning the latest version number JSON. **/
 				'checkFrequency' : 1800, 										/** Time in seconds between checking for updates (default: 30 mins). **/
 			},
@@ -823,16 +823,29 @@ function ThreadMods(){
 				
 					Mo.dbg( txt + 'Got all files!' );
 					
+					/***
+						The forum will serve Internet Explorer & FireFox browsers with different HTML
+						for code boxes. It appears they have their <code> tags wrapped in <pre> tags. The
+						correct method requires the contents of the <code> tags to be wrapped in a <pre>
+						tags instead. 
+					***/
+					
 					$( 'code.bbc_code' )
-						.css({
+						.each( function(i,e){
+							if( $(e).parent()[0].tagName === 'PRE' ) 
+								$(e).insertBefore( $(e).parent() )
+									.next()
+									.remove(); /** Kill empty pre otherwise SyntaxHighlighter will try and parse its contents. **/
+						}).css({
 							'padding'		: '0px',
 							'max-height'	: 'none',
 							'border'		: '1px solid #cfcfcf',
 							'position'		: 'relative'
-						})
-						.wrapInner( '<pre class="brush: cpp"></pre>' )
+						}).wrapInner( '<pre class="brush: cpp"></pre>' )
 						.children()
-						.each( function ( i, e ){ $(e).innerText( $(e).innerText() ); });
+						.each( function ( i, e ){ 
+							e.innerHTML = e.innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "").replace( /<br>/g,'\n' );
+						});
 						
 					SyntaxHighlighter.defaults.gutter = chl.lineNumbers;
 					SyntaxHighlighter.defaults.toolbar = false;
@@ -844,9 +857,16 @@ function ThreadMods(){
 					//Fix code box height, as highlighted code is smaller than the standard SMF code.
 					$( '.bbc_code' ).each( function( i, e ){ 
 						$(e).css( 'height', ( $(e).find( '.syntaxhighlighter' )[0].scrollHeight > config.sizeableCode.value ? config.sizeableCode.value + 'px' : 'auto' ) )
-							.children()
-							.css( 'display', 'inline-block' );
-					});				
+							.children('div')
+							.css({ 
+								'display' : 'inline-block',
+								'width' : 'auto',
+								'min-width' : '100%'
+							}).children()
+							.css({ 
+								'overflow':'hidden',
+								'display' : 'inline-block'});
+					});
 				}},
 			failHandler = function (s){
 				Mo.dbg( txt + 'AJAX Failed', Mo.debug.error );

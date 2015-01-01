@@ -1,10 +1,11 @@
 
-### Jan 01, 2015 `V 0.0.42`
+### Jan 01, 2015 `V 0.0.43`
 - Improvements
   - Changed auto update time to 30mins from 10 mins
 - Bug Fixes
-  - Fixed syntax highlighter horizontal scroll issue (#16)
-  - Prevent hiding of 'LOG IN'/'SIGN UP' options when not logged in. (#15)
+  - Fixed syntax highlighter horizontal scroll issue `#16`
+  - Prevent hiding of 'LOG IN'/'SIGN UP' options when not logged in. `#15`
+  - Fixed SyntaxHighlighter for IE, it appears part of the same problem appeared in FireFox. `#10`
 
 ### Dec 27, 2014 `V 0.0.40`
 

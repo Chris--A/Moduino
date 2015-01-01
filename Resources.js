@@ -36,24 +36,6 @@ jQuery.cachedScript = function( url, options ) {
 };
 
 
-/*! jQuery innerText extension from: http://www.davidtong.me/innerhtml-innertext-textcontent-html-and-text/ **/
-
-$.fn.innerText = function(msg) {
-	 if (msg) {
-		if (document.body.innerText) {
-		   for (var i in this) this[i].innerText = msg;
-		} else {
-		   for (var i in this) this[i].innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "");
-		}
-		return this;
-	 } else {
-		if (document.body.innerText)
-			return this[0].innerText;
-		else
-			return this[0].innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "");
-	 }
-};
-
 /*!
  * iff - v0.2 - 6/3/2009
  * http://benalman.com/projects/jquery-iff-plugin/
