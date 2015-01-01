@@ -131,7 +131,7 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':0,'revision':41},				/** Version data for this copy of Moduino. **/
+				'components':{'major':0,'minor':0,'revision':42},				/** Version data for this copy of Moduino. **/
 				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 	/** URI returning the latest version number JSON. **/
 				'checkFrequency' : 1800, 										/** Time in seconds between checking for updates (default: 30 mins). **/
 			},
@@ -639,7 +639,11 @@ function GlobalMods(){
 	
 	if( config.removeShopping ){
 		Mo.dbgm( 'removeShopping' );
-		$( 'li' ).find( '.cart' ).hide();
+		$( 'a.cart' )
+			.each( function (i,e){
+				if( ( /(shopping_cart)$/ ).test( $(e).attr("href") ) )
+					$(e).hide();
+			});
 	}
 	
 	
