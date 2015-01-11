@@ -63,7 +63,8 @@ var Moduino = {
 					'enabled'	: true,			
 					'hide'		: true,			/** Hide sticky threads **/
 					'addToggle'	: true			/** Add a button to toggle visibility **/
-				}	
+				},
+				'sizeLastPostInfo' : true,		/** Enlarge last post info to incorporate unused width & place info on a single line (if possible) **/
 			}
 		
 		},
@@ -97,6 +98,7 @@ var Moduino = {
 			'shrinkPost'		: true,			/** Minor padding & margin fixes. **/
 			'combineKarma'		: true,			/** Combine the '[Add Karma]' link with the karma count **/
 			'hideProfileLink'	: true,			/** Currently a users post profile can show two web links **/
+			'movePostOptions'	: true,			/** Move the options like quote/edit/report to the post header **/
 			
 			'codeHighlighting'	: {
 				'enabled'		: true,
@@ -108,7 +110,11 @@ var Moduino = {
 				'theme'			: 'Moduino',	/** Theme CSS. **/
 				'cssExt'		: 'scss'		/** CSS source file extension. **/
 			},
-			'disableQuickReplyQuote' : true
+			'disableQuickReplyQuote' : true,
+			
+			'temporary' : {
+				'hide2ndKarma'	: true
+			}
 		},
 		
 		/***
@@ -131,14 +137,14 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':0,'revision':43},				/** Version data for this copy of Moduino. **/
-				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 	/** URI returning the latest version number JSON. **/
+				'components':{'major':0,'minor':1,'revision':0},				/** Version data for this copy of Moduino. **/
+				'versionCheckJSON' : '//arduino.land/Moduino/Version', 			/** URI returning the latest version number JSON. **/
 				'checkFrequency' : 1800, 										/** Time in seconds between checking for updates (default: 30 mins). **/
 			},
 			'fontAwesome'	: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', /** Path to font awesome, default is Twitters Bootstrap CDN **/
 			'jQueryUI'		: '//code.jquery.com/ui/1.11.2/jquery-ui.min.js',
 			'jQueryUITheme'	: '//code.jquery.com/ui/1.11.2/themes/start/jquery-ui.min.css',
-			'sourceRepository' : 'https://arduino.land/Moduino/Source/',  /** Location of the JS files. **/
+			'sourceRepository' : '//arduino.land/Moduino/Source/',  			/** Location of the JS files. **/
 		},		
 	},
 	
@@ -157,7 +163,21 @@ var Moduino = {
 		return s.charAt(0).toUpperCase() + s.slice(1);
 	},
 	
+	
+	'resizeEvents' : {
+		'events' : [],
+		'add' : function(ev){
+		  Moduino.resizeEvents.events.push(ev);
+		  ev(); //Call it once to do initial size.
+		}
+	},
+	
 	'resize' : function (){
+	
+		/** Modification based resizing. **/
+		$( Moduino.resizeEvents.events ).each(function(i,e){ e(); });
+	
+		/** Moduino device resize events **/
 	
 		var pfx = Moduino.config.internal.idPrefix;
 		
@@ -308,7 +328,7 @@ var Moduino = {
 	
 		
 	
-		//Create console bar and thankyou note.
+		//Create console bar and thank you note.
 		var cint = this.config.internal;
 		var footer = $( 'div#pagefooter.pagefooter' );
 		var dbg = cint.idPrefix + 'footer';
@@ -544,6 +564,47 @@ function formatButton( b ){
 }
 
 
+/***
+	addHoverSelect function.
+	This adds a 'Select All' button in the form of a hover over.
+	owner:	element to show button on hover.
+	what:	element containing text to select.
+	returns: owner as a jQuery object for function chaining.
+***/
+
+function addHoverSelect( owner, what ){
+
+		what = what || 'this';
+
+		//Handler to reposition hover box if page scrolls ( when container scroll reaches the bottom ).
+		var handler = function(){
+			$( '.select-all-hover' )
+				.filter( ':visible' )
+				.each(function( i, e ){
+					$(e).css( 'top', $(e).parent().offset().top - $(window).scrollTop() );
+			});
+		};
+		
+		$( owner )
+			.append( '<button class="select-all-hover" onClick="' + "selectElementText(" + what + ");" + '">Select All</button>' )
+			.on('mouseenter', function () {
+				$(this)
+					.children( '.select-all-hover' )
+					.show();
+				handler();
+				$(window).bind( 'scroll', handler );
+			}).on('mouseleave', function () {
+				$(this).children( '.select-all-hover' ).hide();
+				$(window).unbind( 'scroll', handler );
+		});
+		formatButton( '.select-all-hover' )
+			.css( 'position', 'fixed' )
+			.hide();
+		return $( owner );
+}
+
+
+
 /** Moduino entry point. **/
 
 $( function (){
@@ -662,7 +723,7 @@ function GlobalMods(){
 	
 	if( config.addLastPosts ){
 		Mo.dbgm( 'addLastPosts' );
-		$( '.unread_links' ).append( '<a href="http://forum.arduino.cc/index.php?action=profile;area=showposts">Last posts</a>' );
+		$( '.unread_links' ).append( '<a href="//forum.arduino.cc/index.php?action=profile;area=showposts">Last posts</a>' );
 	}
 }
 
@@ -736,6 +797,31 @@ function ForumIndexMods( mode ){
 			$( '#description_board' ).prepend( '<span class="btn" id="sticky-toggle" onClick="' + "$( '" + sel + "' ).toggle();" + '">Sticky Threads</span>' );
 			formatButton( '#sticky-toggle' ).css( 'float','right' );
 		}
+	}
+	
+	if( config.sizeLastPostInfo ){
+		Mo.dbgm( 'sizeLastPostInfo' );
+		
+		$('.lastpost.p-top-7')
+			.css( 'padding-bottom','1px' ) //Prevents low chars like 'g' and 'y' getting cut off.
+			.find( 'br' )
+			.replaceWith( '<span> </span>' );
+		
+		Mo.resizeEvents.add( function(){
+
+			var width = 0;
+		
+			//Get width of title elements & title bar.
+			width = $('#topic_header')
+				.children()
+				.not('div.lastpost')
+				.each(function(){ 
+					width += $(this).outerWidth( true ); 
+				}).end()
+				.end()
+				.width() - width;
+			$('.lastpost.p-top-7').css('cssText', 'width: ' + width + 'px !important;')
+		});
 	}
 }
 
@@ -836,6 +922,13 @@ function ThreadMods(){
 								$(e).insertBefore( $(e).parent() )
 									.next()
 									.remove(); /** Kill empty pre otherwise SyntaxHighlighter will try and parse its contents. **/
+									
+							//Remove tab spans:
+							$(e).children('span')
+								.each(function(){
+									$(this).replaceWith(this.childNodes);
+							});
+							
 						}).css({
 							'padding'		: '0px',
 							'max-height'	: 'none',
@@ -844,7 +937,7 @@ function ThreadMods(){
 						}).wrapInner( '<pre class="brush: cpp"></pre>' )
 						.children()
 						.each( function ( i, e ){ 
-							e.innerHTML = e.innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace(/(&lt;([^&gt;]+)&gt;)/gi, "").replace( /<br>/g,'\n' );
+							e.innerHTML = e.innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace( /<br>/g,'\n' );
 						});
 						
 					SyntaxHighlighter.defaults.gutter = chl.lineNumbers;
@@ -960,38 +1053,38 @@ function ThreadMods(){
 			Mo.dbgm( 'disableQuickReplyQuote' );
 			if( QuickReply.prototype.quote != undefined ) QuickReply.prototype.quote = null;
 		}
-	}
-}
-
-function addHoverSelect( owner, what ){
-
-		what = what || 'this';
-
-		//Handler to reposition hover box if page scrolls ( when container scroll reaches the bottom ).
-		var handler = function(){
-			$( '.select-all-hover' )
-				.filter( ':visible' )
-				.each(function( i, e ){
-					$(e).css( 'top', $(e).parent().offset().top - $(window).scrollTop() );
-			});
-		};
 		
-		$( owner )
-			.append( '<button class="select-all-hover" onClick="' + "selectElementText(" + what + ");" + '">Select All</button>' )
-			.on('mouseenter', function () {
-				$(this)
-					.children( '.select-all-hover' )
-					.show();
-				handler();
-				$(window).bind( 'scroll', handler );
-			}).on('mouseleave', function () {
-				$(this).children( '.select-all-hover' ).hide();
-				$(window).unbind( 'scroll', handler );
-		});
-		formatButton( '.select-all-hover' )
-			.css( 'position', 'fixed' )
-			.hide();
-		return $( owner );
+		if( config.movePostOptions ){
+		
+			Mo.dbgm( 'movePostOptions' );
+			
+			$('.post_wrapper').each(function(){
+				var pn = $(this).find('.page_number');
+				var qb = $(this).find('ul.quickbuttons');
+				
+				qb.insertAfter( pn )
+					.addClass( 'floatright' )
+					.css({
+						'clear' : 'none',
+						'margin' : -((qb.outerHeight(true) - pn.outerHeight(true))/4) + 'px 0px 0px 0px'
+					}).prepend( $(this).find('li.report_link') );
+			}).find('.postarea .post')
+			.css('overflow','visible');
+			
+			$('.under_message').hide();
+		}
+		
+		if( config.temporary ){
+		
+			if( config.temporary.hide2ndKarma ){
+				Mo.dbgm( 'temporary.hide2ndKarma' );
+				
+				$('ul.user_info').each(function(){ 
+					$(this).find('.karma_labels').eq(1).remove();
+				});
+			}
+		}
+	}
 }
 
 /***
