@@ -7,16 +7,13 @@ tool may be what you are looking for. Of course there will be bugs to begin with
 an excellent multi browser enhancement for the forums. 
 
 **Written by:**	*Christopher Andrews.*
-**Licence:**	*Released using GPL licence.*
+**Licence:** *Released using GPL licence.*
+**Website:** *[arduino.land/Moduino/](http://arduino.land/Moduino/)*
 
+### Modifications
 
-### `8 Dec 2014` This system is still under construction. 
-  
-Its stable and ready to go, however I still need to create usage instructions on the homepage.
-Once some new improvements are added, no installation may be necessary at all. However this is still only a plan.
-
-There are currently 26 modifications available. Each mod can be disabled in the configuration.
-For a preview and instructions, visit http://arduino.land/Moduino/
+There are currently 26 modifications available and each one can be controlled manually in the configuration.
+Some mods have custom values which can be tweaked, however most are simply `true`/`false` combinations.
 
 #### Global forum modifications.
 
@@ -43,7 +40,7 @@ For a preview and instructions, visit http://arduino.land/Moduino/
 * Disable using quick reply when quoting a post.
 * Move post tools into post header.
 * **Profile mods**:
-	* Combine *[Add Karma]* link with user karma count.
+	* Combine `[Add Karma]` link with user karma count.
 	* Hide IP text.
 	* Hide secondary website link.
 * **Code box mods**:
@@ -59,4 +56,3 @@ For a preview and instructions, visit http://arduino.land/Moduino/
 
 #### Temporary modifications (things that are likely to change within a few days/weeks)
     * Hide second `[Add Karma]` link.
-

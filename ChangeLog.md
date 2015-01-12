@@ -1,5 +1,5 @@
 
-#### Jan 10, 2015 `V 0.1.0`
+#### Jan 11, 2015 `V 0.1.0`
 
 - Improvements
   - Moved to version 0.1.0 so composer installations do not need `"minimum-stability": "dev"`.
@@ -11,6 +11,7 @@
   - [thread] Hide second `[Add Karma]` label. [`#13`](https://github.com/Chris--A/Moduino/issues/13)
   - [index.forum] Enlarged last post info to maximum. Info now takes 1 line where possible (Reduced from 3, long user names may push to a second line) ([`#11`](https://github.com/Chris--A/Moduino/issues/11),[`#13`](https://github.com/Chris--A/Moduino/issues/13))
   - [thread] Moved post tools into post header. This includes the quote, edit, more, and report to moderator tools. [`#2`](https://github.com/Chris--A/Moduino/issues/2)
+
 #### Jan 01, 2015 `V 0.0.43`
 
 - Improvements
