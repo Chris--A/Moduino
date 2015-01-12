@@ -1,9 +1,9 @@
 {
-	"version"		:	"0.1.0",
+	"version"		:	"0.1.1",
 	"components"	:	{
 	
 		"major"		:	0,
 		"minor"		:	1,
-		"revision"	:	0
+		"revision"	:	1
 	}
 }
