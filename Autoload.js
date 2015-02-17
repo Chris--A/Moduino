@@ -34,7 +34,7 @@ $( function(){
 	if( document.location.href.indexOf( 'forum.arduino.cc' ) == -1 ) return;
 	var loggit = function( s ){ if( !(typeof console === 'undefined') ) console.log( 'Moduino{autoload}: ' + s ); };
 	
-	$.ajax( 'http://arduino.land/Moduino/Source/Resources.js', { dataType: 'script', cache: true })
+	$.ajax( 'https://arduino.land/Moduino/Source/Resources.js', { dataType: 'script', cache: true })
 		.success( function(){
 			$.cookie.json = true;
 			$.cookie.defaults.path = '/';
@@ -55,7 +55,7 @@ $( function(){
 				getSuffux = '?dummy=' + Math.round(new Date().getTime() / 1000); //A time-stamp will ensure a new copy is grabbed.
 			}
 
-			$.ajax( 'http://arduino.land/Moduino/Source/Moduino.js' + getSuffux, { dataType: 'script', cache: cachedMods })
+			$.ajax( 'https://arduino.land/Moduino/Source/Moduino.js' + getSuffux, { dataType: 'script', cache: cachedMods })
 				.success( function(){ Mo.setting.update( 'get-update', false ); })
 				.fail( function(){ loggit( 'Failed to retrieve Moduino.js' ); });
 		}).fail( function (){ loggit( 'Failed to retrieve Resources.js' ); });	

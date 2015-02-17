@@ -1,7 +1,7 @@
 /*!
 	Moduino, A modification system for the Arduino.cc forums.
     Copyright (C) 2014  Christopher Andrews
-	http://arduino.land/Moduino/
+	https://arduino.land/Moduino/
 */
 /***
     This program is free software: you can redistribute it and/or modify
@@ -42,7 +42,14 @@ var Moduino = {
 			
 			'removeShopping'	: true,			/** Remove the shopping cart icon. **/
 			'preventScrollNav'	: true,			/** Prevent nav from sticking to page while scrolling down. **/
-			'addLastPosts'		: true			/** Add a 'last posts' link to the menu bar. **/
+			'addLastPosts'		: true,			/** Add a 'last posts' link to the menu bar. **/
+			
+			/*'extendedMenu' : {
+				'enabled' : true,
+				'data' : [
+					'item1' : 'link1',
+				]
+			}*/
 		},
 		
 		'index' : {
@@ -99,12 +106,20 @@ var Moduino = {
 			'combineKarma'		: true,			/** Combine the '[Add Karma]' link with the karma count **/
 			'hideProfileLink'	: true,			/** Currently a users post profile can show two web links **/
 			'movePostOptions'	: true,			/** Move the options like quote/edit/report to the post header **/
+			'blurbToToolTip'	: true,			/** Remove the 'blurb' from the post profile and add as tooltip to avatar picture. **/
+			'hideQuickReply'	: true,			/** Hides the quick reply box & adds a toggle button **/
+			
+			'gravatarAvatar'	: {				/** Show a unique avatar for members with no avatar set. **/
+				'enabled'	: true,
+				'salt'	: '_pepper_',				/** A little bit of salt **/
+				'style'		: 'wavatar',		/** Valid styles: identicon, monsterid, wavatar, retro **/
+			},
 			
 			'codeHighlighting'	: {
 				'enabled'		: true,
 				'lineNumbers'	: true,			/** Allow syntax highlighter to insert line numbers. **/
-				'pathToJS'		: '//arduino.land/JS/SyntaxHighlighter/',	/** Location of repo for JS files. **/
-				'pathToCSS'		: '//arduino.land/CSS/SyntaxHighlighter/',	/** Location of repo for CSS files. **/
+				'pathToJS'		: 'https://arduino.land/JS/SyntaxHighlighter/',	/** Location of repo for JS files. **/
+				'pathToCSS'		: 'https://arduino.land/CSS/SyntaxHighlighter/',	/** Location of repo for CSS files. **/
 				'core'			: 'Moduino',	/** Theme core. **/
 				'brushes'		: [ 'Cpp' ],	/** Array of  brushes to use ( different languages ). **/
 				'theme'			: 'Moduino',	/** Theme CSS. **/
@@ -137,17 +152,42 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':1,'revision':1},				/** Version data for this copy of Moduino. **/
-				'versionCheckJSON' : '//arduino.land/Moduino/Version', 			/** URI returning the latest version number JSON. **/
-				'checkFrequency' : 1800, 										/** Time in seconds between checking for updates (default: 30 mins). **/
+				'components':{'major':0,'minor':1,'revision':2},										/** Version data for this copy of Moduino. **/
+				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 							/** URI returning the latest version number JSON. **/
+				'checkFrequency' : 1800, 																/** Time in seconds between checking for updates (default: 30 mins). **/
 			},
-			'fontAwesome'	: '//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', /** Path to font awesome, default is Twitters Bootstrap CDN **/
-			'jQueryUI'		: '//code.jquery.com/ui/1.11.2/jquery-ui.min.js',
-			'jQueryUITheme'	: '//code.jquery.com/ui/1.11.2/themes/start/jquery-ui.min.css',
-			'sourceRepository' : '//arduino.land/Moduino/Source/',  			/** Location of the JS files. **/
+			'fontAwesome'	: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css', /** Path to font awesome, default is Twitters Bootstrap CDN **/
+			'jQueryUI'		: 'https://code.jquery.com/ui/1.11.2/jquery-ui.min.js',
+			'jQueryUITheme'	: 'https://code.jquery.com/ui/1.11.2/themes/start/jquery-ui.min.css',
+			'contextmenu'	: 'https://cdnjs.cloudflare.com/ajax/libs/jquery.ui-contextmenu/1.8.1/jquery.ui-contextmenu.min.js',
+			'crypto-js'		: {
+				'Core'		: 'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/core-min.js',
+				'MD5'		: 'https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/components/md5-min.js',
+				'ready'		: function(){ 
+					return ( typeof CryptoJS !== 'undefined' ) && ( typeof CryptoJS.MD5 !== 'undefined');
+				}
+			},
+			'sourceRepository' : 'https://arduino.land/Moduino/Source/',  								/** Location of the Moduino core JS files. **/
 		},		
 	},
 	
+	mode : {
+		GLOBAL: 0,
+		INDEX : {
+			ROOT : 1,
+			FORUM : 2
+		},
+		THREAD: 3,
+		REPLY: 4,
+		LASTPOSTS:5
+	},
+	
+	'themes' : {
+		'list' : [],
+		'add' : function( theme ){
+		  Moduino.themes.list.push( theme );
+		}
+	},
 	
 	
 	/** Debugging constants for use with the Moduino.dbg() function. Use these values as they may change ( from an integer to a function! ). **/
@@ -158,6 +198,7 @@ var Moduino = {
 		'error'			: 2,
 		'mod'			: 3
 	},
+	
 	
 	'capFirst' : function( s ){
 		return s.charAt(0).toUpperCase() + s.slice(1);
@@ -273,7 +314,7 @@ var Moduino = {
 			var updateTime	= this.unixTime() - cv.checkFrequency;
 			
 			var setImg = function( colour, alt ){
-				$( '<img id="' + pfx + 'version-badge"  class="badges"  src="http://img.shields.io/badge/version-' + [ ver.major, ver.minor, ver.revision ].join('.') + '-' + colour + '.svg" title="' + ( alt || '' ) + '">' )
+				$( '<img id="' + pfx + 'version-badge"  class="badges"  src="//img.shields.io/badge/version-' + [ ver.major, ver.minor, ver.revision ].join('.') + '-' + colour + '.svg" title="' + ( alt || '' ) + '">' )
 					.load( function (){
 						$( '#' + pfx + 'version-badge' ).off().remove();
 						Mo
@@ -340,8 +381,10 @@ var Moduino = {
 			$.cookie.defaults.path = '/';
 		
 			//Add footer to page once loaded.
-			$(window).bind("load", function() {
+			//$(window).load(function() {
+			//$(window).bind("load", function() {
 			
+			var loadGUI = function(){ 
 				var htm = '\
 				<div id="' + dbg + '">																	\
 					<div id="' + pfx + 'version-box">											\
@@ -367,7 +410,7 @@ var Moduino = {
 							<article><p> \
 								Thank you for using Moduino,<br>\
 								Designed and written by Christopher Andrews, Copyright 2014<br> \
-								<a href="http://arduino.land/Moduino/">http://arduino.land/Moduino/</a>. \
+								<a href="https://arduino.land/Moduino/">https://arduino.land/Moduino/</a>. \
 							</p></article>						\
 							<h2>Bugs/Requests</h2> \
 							<article><p> \
@@ -378,7 +421,7 @@ var Moduino = {
 							<ul class="btn-lst">\
 							<li><a class="btn" href="https://github.com/Chris--A/Moduino" target="_blank">Fork the repo</a></li>\
 							<li><a class="btn" href="https://github.com/Chris--A/Moduino/issues/" target="_blank">Create a new issue</a></li>\
-							<li><a class="btn" href="http://forum.arduino.cc/index.php?board=24.0" target="_blank">Discuss in the forum</a></li>\
+							<li><a class="btn" href="//forum.arduino.cc/index.php?board=24.0" target="_blank">Discuss in the forum</a></li>\
 							</ul></article>\						\
 							<h2>Support</h2> \
 							<article><p> \
@@ -460,7 +503,24 @@ var Moduino = {
 				$(window).resize( Moduino.resize );
 				Moduino.resize();	
 				Moduino.checkVersion();			 
-			});
+			};
+			
+			/** Pollute a namespace, just to stick it to all the JS Nazis **/
+			String.prototype.repeat = function( num ){ 
+				var result = '';
+				while( num-- ) result += this;
+				return result;
+				//return new Array( parseInt(num) + 1 ).join( this ); /** http://stackoverflow.com/a/202627/4057102 **/ << Fails in chrome 36
+			}			
+			
+			var readyStateCheckInterval = setInterval(function() {
+				if (document.readyState === "complete") {
+					if (jQuery.ui) {
+						loadGUI();
+						clearInterval(readyStateCheckInterval);
+					}
+				}
+			}, 100);			
 
 			$( '#' + cint.idPrefix + 'octo' ).css({
 				'border-radius': '20px',
@@ -468,11 +528,13 @@ var Moduino = {
 				'-moz-border-radius': '20px',
 				'margin' : '0 2px'
 			});
-			
+
 			Moduino.dbg = function ( str, level ){
 				var	config = Moduino.config.internal, msgType;
 				$.each( Moduino.debug, function( k,v ){ return ( v == ( level || Moduino.debug.notification ) ) ? ( msgType = Moduino.capFirst(k), false ) : true; });
-				var msg = 'Moduino{' + msgType + '}: ' + ( str || "\r\n=======================================\r\nThank you for using Moduino\r\nWritten by:	Christopher Andrews\r\nhttp://arduino.land/Moduino/ 2014\r\nReleased using GPL licence\r\n=======================================\r\n" );
+				
+				var bar = "\r\n" + '='.repeat( 40 ) + "\r\n";
+				var msg = 'Moduino{' + msgType + '}: ' + ( str || (bar + "Thank you for using Moduino\r\nWritten by: Christopher Andrews\r\nhttps://arduino.land/Moduino/ 2014\r\nReleased using GPL licence"+bar));
 				if( !(typeof console === 'undefined') ) console.log( msg );
 			}
 			
@@ -484,12 +546,29 @@ var Moduino = {
 		
 		$( 'head' )
 			.append( '<link href="' + cint.fontAwesome + '" rel="stylesheet">' )
+			.append( '<script src="' + cint['crypto-js'].Core + '"></script>' )
 			.append( '<link href="' + cint.jQueryUITheme + '" rel="stylesheet">' )
 			.append( '<script src="' + cint.jQueryUI + '"></script>' );
 			
+		var CryptoJSInterval = setInterval(function(){
+			if( typeof CryptoJS === 'object' ){
+				clearInterval( CryptoJSInterval );
+				$( 'head' ).append( '<script src="' + cint['crypto-js'].MD5 + '"></script>' );
+			}
+		}, 100 );
+		
+		var contextmenuInterval = setInterval(function(){
+			if(jQuery && jQuery.ui){
+				clearInterval( contextmenuInterval );
+				$( 'head' ).append( '<script src="' + cint.contextmenu + '"></script>' )
+			}
+		}, 100 );		
+			
+		$.getCached
+			
 		if( typeof __MODUINO__RESOURCES_LOADED__ === 'undefined' ){
 			$.ajax( cint.sourceRepository + 'Resources.js', { dataType: 'script', cache: true })
-				.success( delayedInit )
+				.success(delayedInit)
 				.fail( function (){ 
 					if( !(typeof console === 'undefined') ) console.log( "Moduino{error}: Failed to retrieve Resources.js" );
 				});			
@@ -504,10 +583,13 @@ var Moduino = {
 		var isGlobalIndex		= false,
 			isForumIndex		= false,
 			isThread			= false,
-			isNewReply			= false;
+			isNewReply			= false,
+			isLastPosts			= false;
 			
 			
 		this.cookie.set( 'pages-modded', this.cookie.get( 'pages-modded', 0 ) + 1 );
+		
+		this.themes.add( ReHash );
 
 		//Try determine page via its title string.
 		switch( $( 'title' ).first().text() ){
@@ -516,33 +598,92 @@ var Moduino = {
 			case 'Post Reply': 				isNewReply		= true; break;
 			default:
 			
+				if( !(isLastPosts = $('title').first().text().indexOf('Show Posts') === 0) ){
+					if( !(isLastPosts = $('title').first().text().indexOf('Topics - ') === 0) ){
+						isLastPosts = $('title').first().text() =='Recent Posts';
+					}
+				}
+			
 				//Only threads should contain a #tob_subject element.
 				isThread = !!$( 'span#top_subject' ).length;
 				
 				//Detect forum index.
-				isForumIndex = ( /https?:\/\/forum.arduino.cc\/(index.php)?\?(\w*=\w*&)?board=[0-9.]*/ ).test( document.location.href );
+				if( document.location.href.indexOf( 'action=unread' ) == -1 ){
+					isForumIndex = ( /https?:\/\/forum.arduino.cc\/(index.php)?\?(\w*=\w*&)?board=[0-9.]*/ ).test( document.location.href );
+				}else{
+					isForumIndex = true;
+				}
 		}
 		
 		switch( bv( isGlobalIndex ) +
 				bv( isForumIndex ) +
 				bv( isThread ) + 
-				bv( isNewReply ) ){
+				bv( isNewReply ) +
+				bv( isLastPosts ) ){
 		
 			case 0:
 				Mo.dbg( 'Page does not match any detection rule!', Mo.debug.warning );
 			case 1:
 			
+				var steps = {};
+				steps[ Moduino.mode.INDEX.ROOT ]	= [ isGlobalIndex, GlobalIndexMods ];
+				steps[ Moduino.mode.INDEX.FORUM ]	= [ isForumIndex, ForumIndexMods ];
+				steps[ Moduino.mode.THREAD ]		= [ isThread, ThreadMods ];
+				steps[ Moduino.mode.REPLY ]			= [ isNewReply, ReplyMods ];
+				steps[ Moduino.mode.LASTPOSTS ]		= [ isLastPosts, null ];
+				
 				GlobalMods();
-				if( isGlobalIndex ) GlobalIndexMods();
-				if( isForumIndex ) ForumIndexMods();
-				if( isThread ) ThreadMods();
-				if( isNewReply ) ReplyMods();
+				$.each( Moduino.themes.list, function(){ this( Moduino.mode.GLOBAL ); });
+				
+				$.each( steps, function(k,v){
+					if(v[0]){
+						if( v[1] !== null ) v[1]();
+						$.each(Moduino.themes.list, function(){this(k);});
+						return false;
+					}
+				});
 				break;
 				
 			default:
 				Mo.dbg( 'Page matches more than one rule!', Mo.debug.error );
 		}		
-	}
+	},
+	
+	/***
+		JSONMenu function
+		Item array.
+		0: link
+		1: icon
+		2: [optional] disabled (true/false)
+	***/
+
+	'JSONMenu' : function( json, csscls ){
+		var result = '<ul' + ( csscls ? ' class="' + csscls + '"' : '' ) + '>';
+		$.each( json, function(k,v){
+			var internalData = '';
+			var classes = [];
+			
+			switch( $.type(v) ){
+				case 'null':
+				case 'undefined':
+					internalData = '-';
+					break;
+				case 'array':
+					if(v[1]) classes.push(v[1]);
+					if(v.length == 3 && v[2]) classes.push('ui-state-disabled');
+					v = v[0]; //Let string handle the link
+				case 'string': 
+					internalData = k;// /#|(https?)?\/?\//.test(v) ? k : k; //'<a href="' + v + '">' + k + '</a>' : k; 
+					break;
+				case 'object':
+					internalData = k + ' ' + Moduino.JSONMenu(v); 
+			}
+			// /#|(https?)?\/?\//.test(v) ? '' : 
+			
+			result	+= '<li' + ( classes.length ? ' class="' + classes.join(' ') + '"' : '' ) + ' cmd="' + v + '">' + internalData + '</li>';
+		});
+		return result + '</ul>';
+	}	
 };
 
 var Mo = Moduino;
@@ -550,6 +691,17 @@ var Mo = Moduino;
 /***
 	Helper functions and jQuery add ons.
 ***/
+
+
+/** pcss() set css styles using vendor prefixes **/
+(function ( $ ) {
+	$.fn.pcss = function( k, v ){
+		return this.css((function (o){ 
+			$.each([ '-webkit-', '-moz-', '' ],function(){ o[this+k]=v; });
+			return o;
+		})({}));
+	};
+}( jQuery ));
 
 function formatButton( b ){
 	return $( b ).css({
@@ -604,7 +756,6 @@ function addHoverSelect( owner, what ){
 }
 
 
-
 /** Moduino entry point. **/
 
 $( function (){
@@ -614,8 +765,6 @@ $( function (){
 	
 	Mo.init( true );
 });
-
-
 
 
 /***
@@ -637,7 +786,11 @@ function GlobalMods(){
 	
 	var config = Mo.config.global;
 	
+	
+	
 	if( config.resizeContent.enabled ){
+	
+		
 
 		Mo.dbgm( 'resizeContent' );
 		
@@ -657,8 +810,14 @@ function GlobalMods(){
 	
 		Mo.dbgm( 'minimizeHeader' );
 		
+		$('#navWrapper' ).css({
+			'max-width' : 'none',
+			'width' : '100%'
+		});
+		
 		//Remove colour from page.
 		$( 'body' ).css( 'background', 'none' );
+		$('#pageheader .row, #headerbread>.row').css('cssText','max-width: none !important;padding:0 3px 0 3px');
 		$( '#pageheader' ).css({
 			'margin-top'	: '5px',
 			'padding-top'	: '3px'
@@ -692,8 +851,6 @@ function GlobalMods(){
 				'width'		: config.resizeContent.value
 			});
 		}
-		
-		
 	}
 	
 	/** Hide the damn shopping cart. **/
@@ -722,9 +879,28 @@ function GlobalMods(){
 	/** Add a 'last posts' link to the menu bar. **/
 	
 	if( config.addLastPosts ){
-		Mo.dbgm( 'addLastPosts' );
-		$( '.unread_links' ).append( '<a href="//forum.arduino.cc/index.php?action=profile;area=showposts">Last posts</a>' );
+		Mo.dbgm( 'addLastPosts:Removed' );
+		$( '.unread_links' ).append( '<a href="//forum.arduino.cc/index.php?action=recent">Recent posts</a>' ); //Not last posts any more, recent posts instead.
 	}
+	
+	if( $.type( smf_member_id ) == 'number' ){
+	
+		var usergravInterval = setInterval( function(){
+			if( Mo.config.internal['crypto-js'].ready() && String.prototype.repeat ){
+				clearInterval( usergravInterval );
+				
+				var uimg = $('.userPic>a>img');
+
+				if( uimg.length  ){
+					if( uimg.attr('src').indexOf('user_default.png') != -1 ){
+						uimg.attr('src', GenerateGravatar( smf_member_id ) );
+					}
+				}
+			}
+		}, 100 );
+	}
+	
+
 }
 
 
@@ -802,8 +978,12 @@ function ForumIndexMods( mode ){
 	if( config.sizeLastPostInfo ){
 		Mo.dbgm( 'sizeLastPostInfo' );
 		
-		$('.lastpost.p-top-7')
-			.css( 'padding-bottom','1px' ) //Prevents low chars like 'g' and 'y' getting cut off.
+		$('.msg-bstat').removeClass('msg-bstat'); //Uncompress the view/replies in updated topics.
+		
+		$('.lastpost')
+			.slice(1)
+			.css('padding', '4px 0 1px 0') //Bottom padding prevents low chars like 'g' and 'y' getting cut off.
+			.removeClass('msg-blpost')
 			.find( 'br' )
 			.replaceWith( '<span> </span>' );
 		
@@ -820,7 +1000,10 @@ function ForumIndexMods( mode ){
 				}).end()
 				.end()
 				.width() - width;
-			$('.lastpost.p-top-7').css('cssText', 'width: ' + width + 'px !important;')
+				
+			$('.lastpost')
+				.slice(1)
+				.css('width', width + 'px');
 		});
 	}
 }
@@ -1015,7 +1198,11 @@ function ThreadMods(){
 		if( config.quote.hoverSelect  ){
 		
 			Mo.dbgm( 'quote.hoverSelect' );
-			$( '.bbc_standard_quote' ).wrapInner( '<div></div>' );
+			$( '.bbc_standard_quote' )
+				.wrapInner( '<div></div>' )
+				.children('div')
+				.css('display','inline');
+				
 			addHoverSelect( '.bbc_standard_quote', "$(this).parent().find('div').first()[0]" )
 				.css( 'padding', '4px 4px' );
 		}
@@ -1058,21 +1245,74 @@ function ThreadMods(){
 		
 			Mo.dbgm( 'movePostOptions' );
 			
-			$('.post_wrapper').each(function(){
-				var pn = $(this).find('.page_number');
-				var qb = $(this).find('ul.quickbuttons');
-				
-				qb.insertAfter( pn )
-					.addClass( 'floatright' )
-					.css({
-						'clear' : 'none',
-						'margin' : -((qb.outerHeight(true) - pn.outerHeight(true))/4) + 'px 0px 0px 0px'
-					}).prepend( $(this).find('li.report_link') );
-			}).find('.postarea .post')
-			.css('overflow','visible');
+			$('.post_wrapper')
+				.each(function(){
+					var pn = $(this).find('.page_number');
+					var qb = $(this).find('ul.quickbuttons');
+					
+					qb.insertAfter( pn )
+						.addClass( 'floatright' )
+						.css({
+							'clear' : 'none',
+							'margin' : -((qb.outerHeight(true) - pn.outerHeight(true))/4) + 'px 0px 0px 0px'
+						}).prepend( $(this).find('li.report_link') );
+				}).find('.postarea .post')
+				.css('overflow','visible');
 			
 			$('.under_message').hide();
 		}
+		
+		if( config.blurbToToolTip ){
+		
+			Mo.dbgm( 'blurbToToolTip' );
+			
+			$('.post_wrapper').each(function(){
+				var blurb = $(this).find('li.blurb');
+				$(this)
+					.find('img.avatar')
+					.attr('title',blurb.text());
+				blurb.remove();
+			});
+			
+		}
+		
+		if( config.hideQuickReply ){
+		
+			Mo.dbgm( 'hideQuickReply' );
+
+			formatButton( 
+				$('<span class="btn floatright">Toggle Quick Reply</span>')
+					.appendTo( $('#quickreplybox h3') )
+					.on( 'click', function(){
+						$('#quickReplyOptions').toggle();
+					}));
+				
+			$('#quickReplyOptions').toggle();
+		}
+		
+		if( config.gravatarAvatar.enabled ){
+		
+			Mo.dbgm( 'gravatarAvatar' );
+
+			var gravInterval = setInterval( function(){
+				if( Mo.config.internal['crypto-js'].ready() ){
+					clearInterval( gravInterval );
+
+					$('ul.user_info > .avatar > a > img').each(function(){
+					
+						if( $(this).attr('src').indexOf('avatars/default.png') != -1 ){
+						
+							var profileURI = $(this).parent().attr('href').split(';');
+
+							if( profileURI.length ){
+								$(this).attr('src', GenerateGravatar(profileURI[ profileURI.length - 1 ].split('=')[1]) )
+									.css( 'border','1px solid #bfbfbf' );
+							}
+						}
+					});
+				}
+			}, 100 );
+		}		
 		
 		if( config.temporary ){
 		
@@ -1087,6 +1327,14 @@ function ThreadMods(){
 	}
 }
 
+function GenerateGravatar( id ){
+	var ga = Mo.config.thread.gravatarAvatar;
+	var salt = ga.salt.repeat( 3 );
+	var hash = CryptoJS.MD5( salt + String(id).repeat(2) + salt );
+	var domain = ('https:' == document.location.protocol ? 'https://secure.gravatar.com/' : 'http://www.gravatar.com/');
+	return domain + 'avatar/' + hash + '?f=y&d=' + ga.style;
+}
+
 /***
 	ReplyMods function.
 ***/
@@ -1094,5 +1342,283 @@ function ThreadMods(){
 function ReplyMods(){ 
 	Mo.dbg( 'Found reply' );
 }
+
+/*****************************************************************************************
+	Themes
+*****************************************************************************************/
+
+function ReHash( step ){
+
+	switch( Number(step) ){
+	
+		case Mo.mode.GLOBAL:
+		
+			//Install gravatar image for default avatars.
+		
+			var fURL = '//forum.arduino.cc/index.php?action=';
+		
+			var menu = {
+				'View My...' : {
+					'Last Posts' : fURL + 'profile;area=showposts',
+					'Topics' : fURL + 'profile;area=showposts;sa=topics',
+					'Attachments' : fURL + 'profile;area=showposts;sa=attach',
+					'Alerts' : fURL + 'profile;area=showalerts',
+					'Drafts' : fURL + 'profile;area=showdrafts',
+					'Stats' : fURL + 'profile;area=statistics',
+					'Unwatched Topics' : fURL + 'profile;area=showposts;sa=unwatchedtopics',
+					'Sep4' : null,
+					'Profile' : 'https://id.arduino.cc/',
+					'Messages' : fURL + 'pm'
+				},
+				/*'Recent Posts' : fURL + 'recent',
+				'Bookmarks' : {
+					'No bookmarks' : [ 'null', '', true  ],
+				},*/
+				'Sep0' : null,
+				'Logout' : 'https://id.arduino.cc/auth/logout/?returnurl=http%3A%2F%2Fforum.arduino.cc',
+				'Sep6' : null,
+				'SMF' : {
+					'Whos online' : fURL + 'who',
+					'Forum groups' : fURL + 'groups',
+					'Sep1' : null,
+					'Statistics' : fURL + 'stats',
+					'Clock' : {
+						'BCD' : fURL + 'clock',
+						'Binary' : fURL + 'clock;rb'
+					},
+					'Calendar' : fURL + 'calendar',
+					'Sep2' : null, 
+					'Help' : fURL + 'help',
+					'Credits' : fURL + 'credits',
+					'Sep3' : null, 
+					'about:unknown' : fURL + 'about:unknown'
+				},
+				'Moduino' : {
+					'Configuration': '',
+					'Sep5' : null,
+					'Homepage' : 'https://arduino.land/Moduino/',
+					'GitHub' : 'https://github.com/Chris--A/Moduino'
+				}
+			};
+
+			var menuInterval = setInterval(function(){
+				if(jQuery && jQuery.ui && jQuery.fn.contextmenu){
+					clearInterval( menuInterval );
+					
+					$(Mo.JSONMenu(menu, 'mo-menu'))
+						.appendTo( $('body') )
+						.css( 'display','none' );
+					
+					$('.userPic')
+						.attr('id','mo-menu-target')
+						.parent()
+						.attr('id','mo-menu-context');
+						
+					setTimeout( function(){
+						$("#mo-menu-context").contextmenu({
+							delegate: "#mo-menu-target",
+							menu: '.mo-menu',
+							select: function(event, ui) { 
+							
+								var cmd = ui.item.attr('cmd');
+								
+								if( /#|(https?)?\/?\//.test(cmd) ){
+									window.location.href = cmd;
+								}
+							}
+						});
+						$('.userPic').removeClass('has-dropdown not-click');
+					},1234 );
+				}
+			},25);
+			
+			$('#headerbread').css('border', '1px solid #00979C')
+				.pcss( 'border-bottom-left-radius','6px' )
+				.pcss( 'border-bottom-right-radius','6px' );
+			
+			$('#description_board,.cat_bar').pcss('border-radius','6px');
+				
+			Rehash_stylizeWhiteBtns( 'input[type="submit"]:not([name="btnG"]),input[type="button"],button[type="submit"]' );
+			break;
+
+		case Mo.mode.INDEX.FORUM:
+		
+			$('.windowbg.clearfix')
+				.css({
+					'border' : '1px solid #DFDFDF',
+					'border-top' : '0px',
+					'background-color' : '#eee'			
+				}).pcss( 'box-shadow', 'inset 0px 0px 3px 1px rgba(235,235,235,1)' )
+				.filter(':odd')
+				.css('background-color','#f7f7f7');
+				
+			$('#topic_container').css({
+				'border-top' : '1px solid #DFDFDF',
+				'margin' : '3px 1px 0 1px'
+			});
+				
+			$('div.info,div.stats').css( 'height', 'auto' );		
+			$('.windowbg.clearfix>*').css('padding-bottom', '4px');
+			
+			
+			/** Thread info sizing **/
+			$('.info>p').css({
+				'font-size' : '0.89em',
+				'margin-left' : '11px'
+			}).next('small')
+			.each(function(){
+				if( $(this).prev()[0].tagName === 'P' ){ $(this).appendTo($(this).prev()); }
+			});
+			
+			$('span.new_posts').css({
+				'background' : '#69ABBF',
+				'color' :  '#FFF695',
+				'border' : '1px solid #777',
+				'margin' : 0
+			}).pcss( 'border-radius', '11px' )
+			.pcss( 'text-shadow', '1px 1px #105557' );
+			
+			//break; //Fall through to root index modifications.
+			
+		case Mo.mode.INDEX.ROOT:
+		
+			$('.cat_bar').next().find('.up_contain:first').pcss('border-top-left-radius','6px').pcss('border-top-right-radius','6px');
+			
+			$('.info.home-s>a').css({
+				'text-shadow' : '1px 1px white',
+				'font-size' : '1.3em'
+			}).next('.lastpost-hack')
+			.css('margin',0);
+			
+			$('.stats>p>strong').css('text-shadow', '1px 1px white');
+			
+			
+			
+			$('div.up_contain')
+				.css('border','1px solid #AAA')
+				.pcss( 'box-shadow', 'inset 0px 0px 7px 1px rgba(225,225,225,1)' )
+				.children('div.icon')
+				.css('padding-top','15px');
+				
+			Rehash_stylizeWhiteBtns( '.topbottom,.button-forum' );
+			break;			
+
+		case Mo.mode.THREAD:
+		
+		//
+			Rehash_stylizeWhiteBtns( '.topbottom,.button-forum' );
+			Rehash_stylizePosts( $('.post_wrapper') );
+			break;
+
+		case Mo.mode.LASTPOSTS:
+			Rehash_stylizePosts( $('.windowbg,.windowbg2') );
+			break;
+	};
+}
+
+function Rehash_stylizeWhiteBtns( who ){
+
+	$(who)
+		.css({
+			'border-radius':'6px',
+			'background-color':'#ddd',
+			'border':'1px solid #999',
+			'color':'black'
+		});
+		
+	$('.pagesection').each(function(){
+		$(this)
+			.prepend('<div class="buttonlist floatleft"></div>')
+			.children('.floatleft:not(".buttonlist")')
+			.removeClass('floatleft')
+			.css('display','inline-block')
+			.appendTo($(this).children('.buttonlist.floatleft'));
+			
+		$(this)
+			.find('.topbottom')
+			.removeClass('topbottom')
+			.addClass('button-forum')
+			.css('margin-right', '5px');
+	});
+	$('.buttonlist, .buttonlist .pagelinks').css('margin', '0px');		
+}
+
+function Rehash_stylizePosts( obj ){
+	var largestPosterWidth = 0;
+	obj
+		.css('border', '1px solid #AAA')
+		.pcss( 'box-shadow', 'inset 0px 0px 7px 1px rgba(220,220,220,1)' )
+		.find('.poster')
+		.css('margin-left', '5px')
+		.end()
+		.find('img.avatar')
+		.pcss('border-radius','4px')
+		.end()
+		.find('.postarea, .moderatorbar') //.find('.post, .keyinfo, .moderatorbar')
+		.css({
+			'padding-left' : '5px',
+			'border-left' : '1px solid #bfbfbf'
+		}).end()
+		.find('ul.quickbuttons')
+		.css({
+			'border' : '1px solid #bfbfbf',
+			'padding' : '0px',
+			'margin-right' : '10px'
+		}).end()
+		.find('.page_number')
+		.css('margin-right','5px')
+		.end()
+		.each(function(){ /** Normalize containers. **/
+		
+			var poster = $(this).find('.poster');
+			var postarea = $(this).find('.postarea');
+			//var postRightHeight = 
+			if( poster.height() > postarea.height() ){
+
+				var modb = $(this).find('.moderatorbar');
+				
+				var diff = ( poster.height() - postarea.height() ) - modb.height();
+				
+				if( diff > 0 ){
+				
+					postarea.height( postarea.height() + diff );
+					//postarea.height( poster.height() );
+				}
+			}
+			if( poster.width() > largestPosterWidth ) largestPosterWidth = poster.width(); 
+		})
+		.end()
+		.find('.messageicon')
+		.css('margin','0px');
+	return obj;
+}
+
+function BasicTheme( step ){
+
+	switch( Number(step) ){
+	
+		case Mo.mode.GLOBAL:
+			
+			break;
+			
+		case Mo.mode.INDEX.ROOT:
+		
+			break;
+
+		case Mo.mode.INDEX.FORUM:
+		
+			break;	
+
+		case Mo.mode.THREAD:
+		
+			break;
+			
+		case Mo.mode.LASTPOSTS:
+		
+			break;
+	};
+}
+
+
 
 //EOF

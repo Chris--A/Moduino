@@ -1,5 +1,18 @@
+#### `V 0.1.2` Feb 03, 2015
 
-#### Jan 11, 2015 `V 0.1.0`
+- Improvements
+  - Started implementing themes. A basic theme has been created for initial testing.
+  - Mods are now run on more pages giving a more consistent feel.
+  - A menu system is incorporated on every page which allows instant access to all sections of the forum (non-admin)
+- Bug Fixes
+  - Removed dependencies for window.onLoad event. Fixes [`#14`](https://github.com/Chris--A/Moduino/issues/14)
+- New Mods
+  - [thread] Moved profile 'blurb' to avatar tool-tip.
+  - [lastposts] Added basic theme.
+  - [global,thread] Gravatar support for members with no avatar set. [`#19`](https://github.com/Chris--A/Moduino/issues/19)
+
+
+#### `V 0.1.1` Jan 11, 2015
 
 - Improvements
   - Moved to version 0.1.0 so composer installations do not need `"minimum-stability": "dev"`.
@@ -12,7 +25,7 @@
   - [index.forum] Enlarged last post info to maximum. Info now takes 1 line where possible (Reduced from 3, long user names may push to a second line) ([`#11`](https://github.com/Chris--A/Moduino/issues/11),[`#13`](https://github.com/Chris--A/Moduino/issues/13))
   - [thread] Moved post tools into post header. This includes the quote, edit, more, and report to moderator tools. [`#2`](https://github.com/Chris--A/Moduino/issues/2)
 
-#### Jan 01, 2015 `V 0.0.43`
+#### `V 0.0.43` Jan 01, 2015
 
 - Improvements
   - Changed auto update time to 30mins from 10 mins
@@ -21,7 +34,7 @@
   - Prevent hiding of 'LOG IN'/'SIGN UP' options when not logged in. [`#15`](https://github.com/Chris--A/Moduino/issues/15)
   - Fixed SyntaxHighlighter for IE, it appears part of the same problem appeared in FireFox. [`#10`](https://github.com/Chris--A/Moduino/issues/10)
 
-#### Dec 27, 2014 `V 0.0.40`
+#### `V 0.0.40` Dec 27, 2014
 
 - Bug fixes
   - Updated auto loader
@@ -29,7 +42,7 @@
 - Improvements
   - Added Composer compatibility for Composer based update system on [arduino.land/Moduino/](http://arduino.land/Moduino/)
   
-#### Dec 8, 2014 `V 0.0.39`
+#### `V 0.0.39` Dec 8, 2014
 
 - Improvements
   - Added auto update code.
@@ -38,7 +51,7 @@
   - [global] Added 'Last Posts' link to header.
   - [thread] Provided a toggle to allow quotes to go to the 'New Post' page rather than the 'Quick Reply' box.
 	
-#### Nov 12, 2014 `V 0.0.32`
+#### `V 0.0.32` Nov 12, 2014
 
 - New Mods
   - [global] Prevent navigation from sticking to page while scrolling down.
@@ -56,7 +69,7 @@
   - [thread.code.highlighting] Added option for syntax highlighting.
   - [thread.code.highlighting] Added line numbers toggle.
 
-### `Nov 8, 2014` `V 0.0.1`
+#### `V 0.0.1` Nov 8, 2014
 - Inital file set added (Moduino core and first mods)
 - New Mods
   - [global] Remove shopping cart icon.

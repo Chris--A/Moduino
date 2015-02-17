@@ -12,7 +12,7 @@ an excellent multi browser enhancement for the forums.
 
 ### Modifications
 
-There are currently 26 modifications available and each one can be controlled manually in the configuration.
+There are currently 29 modifications available and each one can be controlled manually in the configuration.
 Some mods have custom values which can be tweaked, however most are simply `true`/`false` combinations.
 
 #### Global forum modifications.
@@ -21,7 +21,7 @@ Some mods have custom values which can be tweaked, however most are simply `true
 * Shrink the page banner.
 * Remove shopping icon.
 * Prevent navigation sticking to page top while scrolling.
-* Add a 'last posts' link.
+* Added a 'last posts' link to menu bar.
 
 #### Root index modifications.
 * Shrink content.
@@ -39,6 +39,9 @@ Some mods have custom values which can be tweaked, however most are simply `true
 * Shrink post containers.
 * Disable using quick reply when quoting a post.
 * Move post tools into post header.
+* Move blurb to avatar tool-tip info.
+* Hide quick reply box and add toggle button.
+* [Gravatar](https://en.gravatar.com/) support for members who have not set an avatar picture.
 * **Profile mods**:
 	* Combine `[Add Karma]` link with user karma count.
 	* Hide IP text.
@@ -55,4 +58,4 @@ Some mods have custom values which can be tweaked, however most are simply `true
 	* Trim excess `<br>` tags from end of quote.
 
 #### Temporary modifications (things that are likely to change within a few days/weeks)
-    * Hide second `[Add Karma]` link.
+* Hide second `[Add Karma]` link.
