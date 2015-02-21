@@ -12,7 +12,7 @@ an excellent multi browser enhancement for the forums.
 
 ### Modifications
 
-There are currently 29 modifications available and each one can be controlled manually in the configuration.
+There are currently 30 modifications available and each one can be controlled manually in the configuration.
 Some mods have custom values which can be tweaked, however most are simply `true`/`false` combinations.
 
 #### Global forum modifications.
@@ -21,7 +21,8 @@ Some mods have custom values which can be tweaked, however most are simply `true
 * Shrink the page banner.
 * Remove shopping icon.
 * Prevent navigation sticking to page top while scrolling.
-* Added a 'last posts' link to menu bar.
+* Added a 'recent posts' link to menu bar.
+* Exposed general forum contents through menu attached to profile icon link in banner (avatar circle).
 
 #### Root index modifications.
 * Shrink content.
