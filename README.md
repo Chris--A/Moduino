@@ -6,9 +6,9 @@ It is not my forum, just one I frequently visit. If you would like to have an op
 tool may be what you are looking for. Of course there will be bugs to begin with, but with your help we can create
 an excellent multi browser enhancement for the forums. 
 
-**Written by:**	*Christopher Andrews.*
-**Licence:** *Released using GPL licence.*
-**Website:** *[arduino.land/Moduino/](http://arduino.land/Moduino/)*
+- **Written by:**	*Christopher Andrews.*
+- **Licence:** *Released using GPL licence.*
+- **Website:** *[arduino.land/Moduino/](http://arduino.land/Moduino/)*
 
 ### Modifications
 

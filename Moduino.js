@@ -43,13 +43,6 @@ var Moduino = {
 			'removeShopping'	: true,			/** Remove the shopping cart icon. **/
 			'preventScrollNav'	: true,			/** Prevent nav from sticking to page while scrolling down. **/
 			'addLastPosts'		: true,			/** Add a 'last posts' link to the menu bar. **/
-			
-			/*'extendedMenu' : {
-				'enabled' : true,
-				'data' : [
-					'item1' : 'link1',
-				]
-			}*/
 		},
 		
 		'index' : {
@@ -152,7 +145,7 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':1,'revision':2},										/** Version data for this copy of Moduino. **/
+				'components':{'major':0,'minor':1,'revision':3},										/** Version data for this copy of Moduino. **/
 				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 							/** URI returning the latest version number JSON. **/
 				'checkFrequency' : 1800, 																/** Time in seconds between checking for updates (default: 30 mins). **/
 			},
@@ -317,12 +310,9 @@ var Moduino = {
 				$( '<img id="' + pfx + 'version-badge"  class="badges"  src="//img.shields.io/badge/version-' + [ ver.major, ver.minor, ver.revision ].join('.') + '-' + colour + '.svg" title="' + ( alt || '' ) + '">' )
 					.load( function (){
 						$( '#' + pfx + 'version-badge' ).off().remove();
-						Mo
-							.DisplayAndSize( $(this), '#' + pfx + 'version-box' )
-							.css({ 
-								'margin-left' : '5px',
-								'cursor' : 'pointer'
-							}).on( 'click', function (){
+						Mo.DisplayAndSize( $(this), '#' + pfx + 'version-box' )
+							.css({ 'margin-left' : '5px', 'cursor' : 'pointer' })
+							.on( 'click', function (){
 								Mo.setting.remove( 'last-check' );
 								Mo.setting.remove( 'latest-version' );
 								$(this).off();
@@ -466,11 +456,7 @@ var Moduino = {
 				
 				$( '#' + pfx + 'content' )
 					.hide()
-					.css({
-						'padding'			: '10px 20px',
-						'background-color'	: '#0078AE',
-						'min-height'		: '390px'
-					})
+					.css({ 'padding' : '10px 20px', 'background-color' : '#0078AE', 'min-height' : '390px' })
 					.find( 'h1,h2,h3' )
 					.each( function (){
 						$(this).css({
@@ -485,11 +471,7 @@ var Moduino = {
 					.addClass( 'ui-state-default' )
 					.css( 'padding', '5px' )
 					.find('*')
-					.css({
-						'display'			: 'inline-block',
-						'background-color'	: 'transparent',
-						'border'			: 'none'
-				});
+					.css({ 'display' : 'inline-block', 'background-color' : 'transparent', 'border': 'none' });
 			
 				$( '#' + pfx + 'title-box a' ).css( 'font-size', 'xx-large' );
 				
@@ -810,18 +792,12 @@ function GlobalMods(){
 	
 		Mo.dbgm( 'minimizeHeader' );
 		
-		$('#navWrapper' ).css({
-			'max-width' : 'none',
-			'width' : '100%'
-		});
+		$('#navWrapper' ).css({ 'max-width' : 'none', 'width' : '100%' });
 		
 		//Remove colour from page.
 		$( 'body' ).css( 'background', 'none' );
 		$('#pageheader .row, #headerbread>.row').css('cssText','max-width: none !important;padding:0 3px 0 3px');
-		$( '#pageheader' ).css({
-			'margin-top'	: '5px',
-			'padding-top'	: '3px'
-		})
+		$( '#pageheader' ).css({ 'margin-top'	: '5px', 'padding-top'	: '3px' })
 			.children( 'div.row' )
 			.first()
 			.css( 'padding-left', '3px' )
@@ -834,10 +810,8 @@ function GlobalMods(){
 		
 		//Remove margin from bread crumbs and move to header navigation.
 		$( '#headerbread' )
-			.css({
-				'margin' : '0px',
-				'padding' : '0 3px 0 3px'
-			}).appendTo( '#pageheader' );
+			.css({ 'margin' : '0px', 'padding' : '0 3px 0 3px' })
+			.appendTo( '#pageheader' );
 		
 		//Move bread crumbs into header navigation.
 		
@@ -899,8 +873,6 @@ function GlobalMods(){
 			}
 		}, 100 );
 	}
-	
-
 }
 
 
@@ -946,10 +918,7 @@ function ForumIndexMods( mode ){
 			.find( 'p' )
 			.css( 'min-height' , 'inherit' );
 			
-		$( '#description_board' ).css({
-			'padding': '5px',
-			'margin': '0px'
-		});
+		$( '#description_board' ).css({ 'padding': '5px', 'margin': '0px' });
 	}
 			
 	/** There is currently an empty menu bar above thread listing. (17px high) **/
@@ -1103,8 +1072,7 @@ function ThreadMods(){
 						.each( function(i,e){
 							if( $(e).parent()[0].tagName === 'PRE' ) 
 								$(e).insertBefore( $(e).parent() )
-									.next()
-									.remove(); /** Kill empty pre otherwise SyntaxHighlighter will try and parse its contents. **/
+									.next().remove(); /** Kill empty pre otherwise SyntaxHighlighter will try and parse its contents. **/
 									
 							//Remove tab spans:
 							$(e).children('span')
@@ -1112,12 +1080,8 @@ function ThreadMods(){
 									$(this).replaceWith(this.childNodes);
 							});
 							
-						}).css({
-							'padding'		: '0px',
-							'max-height'	: 'none',
-							'border'		: '1px solid #cfcfcf',
-							'position'		: 'relative'
-						}).wrapInner( '<pre class="brush: cpp"></pre>' )
+						}).css({ 'padding' : '0px', 'max-height' : 'none', 'border' : '1px solid #cfcfcf', 'position' : 'relative' })
+						.wrapInner( '<pre class="brush: cpp"></pre>' )
 						.children()
 						.each( function ( i, e ){ 
 							e.innerHTML = e.innerHTML.replace(/\&lt;br\&gt;/gi,"\n").replace( /<br>/g,'\n' );
@@ -1134,14 +1098,9 @@ function ThreadMods(){
 					$( '.bbc_code' ).each( function( i, e ){ 
 						$(e).css( 'height', ( $(e).find( '.syntaxhighlighter' )[0].scrollHeight > config.sizeableCode.value ? config.sizeableCode.value + 'px' : 'auto' ) )
 							.children('div')
-							.css({ 
-								'display' : 'inline-block',
-								'width' : 'auto',
-								'min-width' : '100%'
-							}).children()
-							.css({ 
-								'overflow':'hidden',
-								'display' : 'inline-block'});
+							.css({ 'display' : 'inline-block', 'width' : 'auto', 'min-width' : '100%' })
+							.children()
+							.css({ 'overflow':'hidden', 'display' : 'inline-block'});
 					});
 				}},
 			failHandler = function (s){
@@ -1367,7 +1326,8 @@ function ReHash( step ){
 					'Stats' : fURL + 'profile;area=statistics',
 					'Unwatched Topics' : fURL + 'profile;area=showposts;sa=unwatchedtopics',
 					'Sep4' : null,
-					'Profile' : 'https://id.arduino.cc/',
+					'Forum Profile' : fURL + 'profile',
+					'Site Profile' : 'https://id.arduino.cc/',
 					'Messages' : fURL + 'pm'
 				},
 				/*'Recent Posts' : fURL + 'recent',
@@ -1443,39 +1403,26 @@ function ReHash( step ){
 
 		case Mo.mode.INDEX.FORUM:
 		
-			$('.windowbg.clearfix')
-				.css({
-					'border' : '1px solid #DFDFDF',
-					'border-top' : '0px',
-					'background-color' : '#eee'			
-				}).pcss( 'box-shadow', 'inset 0px 0px 3px 1px rgba(235,235,235,1)' )
+			$('.windowbg.clearfix').css({ 'border' : '1px solid #DFDFDF', 'border-top' : '0px', 'background-color' : '#eee' })
+				.pcss( 'box-shadow', 'inset 0px 0px 3px 1px rgba(235,235,235,1)' )
 				.filter(':odd')
 				.css('background-color','#f7f7f7');
 				
-			$('#topic_container').css({
-				'border-top' : '1px solid #DFDFDF',
-				'margin' : '3px 1px 0 1px'
-			});
+			$('#topic_container').css({ 'border-top' : '1px solid #DFDFDF', 'margin' : '3px 1px 0 1px' });
 				
 			$('div.info,div.stats').css( 'height', 'auto' );		
 			$('.windowbg.clearfix>*').css('padding-bottom', '4px');
 			
 			
 			/** Thread info sizing **/
-			$('.info>p').css({
-				'font-size' : '0.89em',
-				'margin-left' : '11px'
-			}).next('small')
+			$('.info>p').css({ 'font-size' : '0.89em', 'margin-left' : '11px' })
+			.next('small')
 			.each(function(){
 				if( $(this).prev()[0].tagName === 'P' ){ $(this).appendTo($(this).prev()); }
 			});
 			
-			$('span.new_posts').css({
-				'background' : '#69ABBF',
-				'color' :  '#FFF695',
-				'border' : '1px solid #777',
-				'margin' : 0
-			}).pcss( 'border-radius', '11px' )
+			$('span.new_posts').css({ 'background' : '#69ABBF', 'color' :  '#FFF695', 'border' : '1px solid #777', 'margin' : 0 })
+			.pcss( 'border-radius', '11px' )
 			.pcss( 'text-shadow', '1px 1px #105557' );
 			
 			//break; //Fall through to root index modifications.
@@ -1484,15 +1431,10 @@ function ReHash( step ){
 		
 			$('.cat_bar').next().find('.up_contain:first').pcss('border-top-left-radius','6px').pcss('border-top-right-radius','6px');
 			
-			$('.info.home-s>a').css({
-				'text-shadow' : '1px 1px white',
-				'font-size' : '1.3em'
-			}).next('.lastpost-hack')
-			.css('margin',0);
+			$('.info.home-s>a').css({ 'text-shadow' : '1px 1px white', 'font-size' : '1.3em' })
+			.next('.lastpost-hack').css('margin',0);
 			
 			$('.stats>p>strong').css('text-shadow', '1px 1px white');
-			
-			
 			
 			$('div.up_contain')
 				.css('border','1px solid #AAA')
@@ -1508,6 +1450,14 @@ function ReHash( step ){
 		//
 			Rehash_stylizeWhiteBtns( '.topbottom,.button-forum' );
 			Rehash_stylizePosts( $('.post_wrapper') );
+			
+			//If images load late, their post container will need to be resized.
+			$('.post > .inner > img').on('load', function() {
+				Rehash_stylizePosts( $(this).closest('.post_wrapper') );
+				$(this).off();
+			}).each(function() {
+			  if(this.complete) $(this).off();
+			});	
 			break;
 
 		case Mo.mode.LASTPOSTS:
@@ -1518,13 +1468,7 @@ function ReHash( step ){
 
 function Rehash_stylizeWhiteBtns( who ){
 
-	$(who)
-		.css({
-			'border-radius':'6px',
-			'background-color':'#ddd',
-			'border':'1px solid #999',
-			'color':'black'
-		});
+	$(who).css({ 'border-radius':'6px', 'background-color':'#ddd', 'border':'1px solid #999', 'color':'black' });
 		
 	$('.pagesection').each(function(){
 		$(this)
@@ -1555,16 +1499,11 @@ function Rehash_stylizePosts( obj ){
 		.pcss('border-radius','4px')
 		.end()
 		.find('.postarea, .moderatorbar') //.find('.post, .keyinfo, .moderatorbar')
-		.css({
-			'padding-left' : '5px',
-			'border-left' : '1px solid #bfbfbf'
-		}).end()
+		.css({ 'padding-left' : '5px', 'border-left' : '1px solid #bfbfbf' })
+		.end()
 		.find('ul.quickbuttons')
-		.css({
-			'border' : '1px solid #bfbfbf',
-			'padding' : '0px',
-			'margin-right' : '10px'
-		}).end()
+		.css({ 'border' : '1px solid #bfbfbf', 'padding' : '0px', 'margin-right' : '10px' })
+		.end()
 		.find('.page_number')
 		.css('margin-right','5px')
 		.end()
@@ -1574,16 +1513,9 @@ function Rehash_stylizePosts( obj ){
 			var postarea = $(this).find('.postarea');
 			//var postRightHeight = 
 			if( poster.height() > postarea.height() ){
-
 				var modb = $(this).find('.moderatorbar');
-				
 				var diff = ( poster.height() - postarea.height() ) - modb.height();
-				
-				if( diff > 0 ){
-				
-					postarea.height( postarea.height() + diff );
-					//postarea.height( poster.height() );
-				}
+				if( diff > 0 ) postarea.height( postarea.height() + diff );
 			}
 			if( poster.width() > largestPosterWidth ) largestPosterWidth = poster.width(); 
 		})
@@ -1592,33 +1524,4 @@ function Rehash_stylizePosts( obj ){
 		.css('margin','0px');
 	return obj;
 }
-
-function BasicTheme( step ){
-
-	switch( Number(step) ){
-	
-		case Mo.mode.GLOBAL:
-			
-			break;
-			
-		case Mo.mode.INDEX.ROOT:
-		
-			break;
-
-		case Mo.mode.INDEX.FORUM:
-		
-			break;	
-
-		case Mo.mode.THREAD:
-		
-			break;
-			
-		case Mo.mode.LASTPOSTS:
-		
-			break;
-	};
-}
-
-
-
 //EOF

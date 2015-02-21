@@ -1,4 +1,10 @@
-#### `V 0.1.2` Feb 03, 2015
+
+#### `V 0.1.3` Feb 21, 2015
+
+- Bug Fixes
+  - Applied fix for sizing issues caused by images loading late. [`#21`](https://github.com/Chris--A/Moduino/issues/21)
+
+#### `V 0.1.2` Feb 13, 2015
 
 - Improvements
   - Started implementing themes. A basic theme has been created for initial testing.
