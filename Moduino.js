@@ -32,7 +32,7 @@ var Moduino = {
 			
 			'resizeContent'	: {
 				'enabled'	: true, 			
-				'value'		: '87%' 			/** Value to resize content to. **/
+				'value'		: '96%' 			/** Value to resize content to. **/
 			},
 			
 			'minimizeHeader' : {
@@ -1312,6 +1312,27 @@ function ReHash( step ){
 	
 		case Mo.mode.GLOBAL:
 		
+			$('head').append('<style> \
+				.nav_grad{ \
+					background: #f6fafa; \
+					background: -moz-linear-gradient(top, #f6fafa 0%, #f7f9f9 41%, #eaeded 100%); \
+					background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6fafa), color-stop(41%,#f7f9f9), color-stop(100%,#eaeded)); \
+					background: -webkit-linear-gradient(top, #f6fafa 0%,#f7f9f9 41%,#eaeded 100%); \
+					background: -o-linear-gradient(top, #f6fafa 0%,#f7f9f9 41%,#eaeded 100%); \
+					background: -ms-linear-gradient(top, #f6fafa 0%,#f7f9f9 41%,#eaeded 100%); \
+					background: linear-gradient(to bottom, #f6fafa 0%,#f7f9f9 41%,#eaeded 100%); \
+					filter: progid:DXImageTransform.Microsoft.gradient( startColorstr="#f6fafa", endColorstr="#eaeded",GradientType=0 ); \
+				} \
+				.rehash-search-bar::-webkit-input-placeholder {color: black !important} \
+			</style>');
+			
+			$('#headerbread').addClass('nav_grad');
+			
+			$('[name="q"]')
+				.addClass('rehash-search-bar')
+				.css({'background-color' : '#FDFEDD', 'color' : 'black'})
+				.attr('placeholder','Google the forum...');
+		
 			//Install gravatar image for default avatars.
 		
 			var fURL = '//forum.arduino.cc/index.php?action=';
@@ -1330,12 +1351,6 @@ function ReHash( step ){
 					'Site Profile' : 'https://id.arduino.cc/',
 					'Messages' : fURL + 'pm'
 				},
-				/*'Recent Posts' : fURL + 'recent',
-				'Bookmarks' : {
-					'No bookmarks' : [ 'null', '', true  ],
-				},*/
-				'Sep0' : null,
-				'Logout' : 'https://id.arduino.cc/auth/logout/?returnurl=http%3A%2F%2Fforum.arduino.cc',
 				'Sep6' : null,
 				'SMF' : {
 					'Whos online' : fURL + 'who',
@@ -1358,7 +1373,9 @@ function ReHash( step ){
 					'Sep5' : null,
 					'Homepage' : 'https://arduino.land/Moduino/',
 					'GitHub' : 'https://github.com/Chris--A/Moduino'
-				}
+				},
+				'Sep6' : null,
+				'Logout' : 'https://id.arduino.cc/auth/logout/?returnurl=http%3A%2F%2Fforum.arduino.cc'
 			};
 
 			var menuInterval = setInterval(function(){
