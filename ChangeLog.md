@@ -1,6 +1,8 @@
 
-#### `V 0.1.3` Feb 21, 2015
+#### `V 0.1.4` Feb 22, 2015
 
+- Improvements
+  - Small skin update.
 - Bug Fixes
   - Applied fix for sizing issues caused by images loading late. [`#21`](https://github.com/Chris--A/Moduino/issues/21)
 
