@@ -1342,14 +1342,15 @@ function ReHash( step ){
 					'Last Posts' : fURL + 'profile;area=showposts',
 					'Topics' : fURL + 'profile;area=showposts;sa=topics',
 					'Attachments' : fURL + 'profile;area=showposts;sa=attach',
+					'Unwatched Topics' : fURL + 'profile;area=showposts;sa=unwatchedtopics',
+					'Sep7' : null,
 					'Alerts' : fURL + 'profile;area=showalerts',
 					'Drafts' : fURL + 'profile;area=showdrafts',
-					'Stats' : fURL + 'profile;area=statistics',
-					'Unwatched Topics' : fURL + 'profile;area=showposts;sa=unwatchedtopics',
+					'Messages' : fURL + 'pm',
 					'Sep4' : null,
 					'Forum Profile' : fURL + 'profile',
 					'Site Profile' : 'https://id.arduino.cc/',
-					'Messages' : fURL + 'pm'
+					'Statistics' : fURL + 'profile;area=statistics'
 				},
 				'Sep6' : null,
 				'SMF' : {
@@ -1374,7 +1375,7 @@ function ReHash( step ){
 					'Homepage' : 'https://arduino.land/Moduino/',
 					'GitHub' : 'https://github.com/Chris--A/Moduino'
 				},
-				'Sep6' : null,
+				'Sep8' : null,
 				'Logout' : 'https://id.arduino.cc/auth/logout/?returnurl=http%3A%2F%2Fforum.arduino.cc'
 			};
 
