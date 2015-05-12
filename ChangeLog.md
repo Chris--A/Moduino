@@ -1,4 +1,8 @@
 
+#### `V 0.1.6` May 05, 2015
+
+- Bumped version to fix inconsistencies.
+
 #### `V 0.1.4` Feb 22, 2015
 
 - Improvements
