@@ -57,6 +57,3 @@ Some mods have custom values which can be tweaked, however most are simply `true
 	* Change colours; This also fixes '*quotes in quotes (2d)*'.
 	* Add select all hover over.
 	* Trim excess `<br>` tags from end of quote.
-
-#### Temporary modifications (things that are likely to change within a few days/weeks)
-* Hide second `[Add Karma]` link.

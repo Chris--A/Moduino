@@ -1,3 +1,9 @@
+#### `V 0.1.7` May 19, 2015
+
+- Updates
+  - Removed temporary mod 'hide second karma link' as it is now removed from the forum.
+- Bug Fixes
+  - Updated 'combine karma' mod. [`#30`](https://github.com/Chris--A/Moduino/issues/30)
 
 #### `V 0.1.6` May 05, 2015
 

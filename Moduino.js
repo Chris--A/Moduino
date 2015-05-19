@@ -118,11 +118,7 @@ var Moduino = {
 				'theme'			: 'Moduino',	/** Theme CSS. **/
 				'cssExt'		: 'scss'		/** CSS source file extension. **/
 			},
-			'disableQuickReplyQuote' : true,
-			
-			'temporary' : {
-				'hide2ndKarma'	: true
-			}
+			'disableQuickReplyQuote' : true
 		},
 		
 		/***
@@ -145,7 +141,7 @@ var Moduino = {
 		'internal' : { 
 			'idPrefix' : '__MODUINO__',	 /** ID prefix for page elements inserted by Moduino. **/
 			'version' : {
-				'components':{'major':0,'minor':1,'revision':6},										/** Version data for this copy of Moduino. **/
+				'components':{'major':0,'minor':1,'revision':7},										/** Version data for this copy of Moduino. **/
 				'versionCheckJSON' : 'https://arduino.land/Moduino/Version', 							/** URI returning the latest version number JSON. **/
 				'checkFrequency' : 1800, 																/** Time in seconds between checking for updates (default: 30 mins). **/
 			},
@@ -1031,8 +1027,8 @@ function ThreadMods(){
 	if( config.combineKarma ){
 	
 		Mo.dbgm( 'combineKarma' );
-		$( 'li.custom.karma_good' ).wrapInner(function(){ 
-			return '<a href="' + $(this).siblings( '.karma_labels' ).hide().children( 'a' ).attr( 'href' ) + '"></a>'; 
+		$( 'li.custom.karma' ).wrapInner(function(){
+			return '<a href="' + $(this).children('a').hide().attr('href') + '"></a>';
 		});
 	}
 	
@@ -1271,17 +1267,6 @@ function ThreadMods(){
 					});
 				}
 			}, 100 );
-		}		
-		
-		if( config.temporary ){
-		
-			if( config.temporary.hide2ndKarma ){
-				Mo.dbgm( 'temporary.hide2ndKarma' );
-				
-				$('ul.user_info').each(function(){ 
-					$(this).find('.karma_labels').eq(1).remove();
-				});
-			}
 		}
 	}
 }
